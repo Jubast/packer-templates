@@ -26,6 +26,17 @@ systemctl start unattended-upgrades
 systemctl enable qemu-guest-agent
 systemctl start qemu-guest-agent
 
+# configure ufw firewall rules
+echo "[INFO] Configuring firewall rules.."
+
+# MariaDB
+ufw allow 3306/tcp comment "MariaDB"
+
+# Redis
+ufw allow 6379/tcp comment "Redis"
+
+ufw reload
+
 # tests
 echo "[INFO] Testing packages.."
 unattended-upgrades --dry-run --debug

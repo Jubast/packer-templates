@@ -137,4 +137,13 @@ build {
       execute_command = "sh -c '{{ .Vars }} {{ .Path }}'"
       script          = "${path.root}/scripts/configure-container-services.sh"
     }
+
+    # Remove NOPASSWD sudo privilege as final step
+    provisioner "shell" {
+      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
+      inline = [
+        "sed -i 's/^${var.user_username}.*/${var.user_username} ALL=(ALL) ALL/' /etc/sudoers.d/90-cloud-init-users",
+        "echo 'Sudo password requirement enabled for ${var.user_username}'"
+      ]
+    }
 }
