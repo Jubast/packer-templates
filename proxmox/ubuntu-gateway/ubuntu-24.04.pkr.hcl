@@ -148,7 +148,13 @@ build {
 
     provisioner "file" {
       destination = "/tmp/docker/nginx-proxy-manager-docker-compose.yml"
-      source      = "${path.root}/assets/docker/nginx-proxy-manager-docker-compose.yml"
+      content     = templatefile("${path.root}/assets/docker/nginx-proxy-manager-docker-compose.yml.pkrtpl.hcl", {
+        npm_db_mysql_host     = var.npm_db_mysql_host
+        npm_db_mysql_port     = var.npm_db_mysql_port
+        npm_db_mysql_user     = var.npm_db_mysql_user
+        npm_db_mysql_password = var.npm_db_mysql_password
+        npm_db_mysql_name     = var.npm_db_mysql_name
+      })
     }
 
     provisioner "file" {

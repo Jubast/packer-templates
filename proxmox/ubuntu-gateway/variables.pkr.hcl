@@ -86,6 +86,35 @@ variable "user_ssh_authorized_keys" {
   description = "The SSH authorized keys for the user."
 }
 
+// NGINX PROXY MANAGER DATABASE
+variable "npm_db_mysql_host" {
+  type        = string
+  description = "The hostname or IP address of the MySQL database server for Nginx Proxy Manager."
+}
+
+variable "npm_db_mysql_port" {
+  type        = number
+  description = "The port of the MySQL database server for Nginx Proxy Manager."
+  default     = 3306
+}
+
+variable "npm_db_mysql_user" {
+  type        = string
+  description = "The MySQL username for Nginx Proxy Manager."
+}
+
+variable "npm_db_mysql_password" {
+  type        = string
+  description = "The MySQL password for Nginx Proxy Manager."
+  sensitive   = true
+}
+
+variable "npm_db_mysql_name" {
+  type        = string
+  description = "The MySQL database name for Nginx Proxy Manager."
+  default     = "npm"
+}
+
 // WIREGUARD SERVER
 variable "wireguard_server_network_interface" {
   type = string

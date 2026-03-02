@@ -28,6 +28,13 @@ user_username               = "myUser"
 user_password_encrypted     = "$6$rounds=4096$4dXBB/1clk96jqRj$2kQWrFitmdolntPRiFx5hN8JCAckGiQd.BjLbaFPn2YwZ3f9UIYAXy8iWb7LKwx.aQjVbwuhIOVzWiQ2RijSN."
 user_ssh_authorized_keys    = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILHLW9aa+K37B5YLqONk9ayKEC5OwjtqG78AwT6YKezR your_email@example.com"
 
+# NGINX PROXY MANAGER DATABASE
+npm_db_mysql_host                           = "192.168.1.254"
+npm_db_mysql_port                           = 3306
+npm_db_mysql_user                           = "npm"
+npm_db_mysql_password                       = "mySecureNpmDbPassword"
+npm_db_mysql_name                           = "npm"
+
 # WIREGUARD
 wireguard_server_network_interface          = "eth0"
 wireguard_server_address_ipv4               = "10.10.0.1"
