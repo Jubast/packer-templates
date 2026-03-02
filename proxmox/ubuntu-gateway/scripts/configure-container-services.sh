@@ -22,39 +22,6 @@ TEMP_DIR="/tmp/docker"
 USER_SYSTEMD_DIR="${HOME}/.config/systemd/user"
 
 ################################################################################
-# Function: cleanup_service <service-name>
-################################################################################
-cleanup_service() {
-    local service_name="$1"
-    local compose_dir="${HOME}/.local/share/containers/${service_name}"
-    local compose_file="${compose_dir}/docker-compose.yml"
-    local systemd_service="podman-compose-${service_name}"
-
-    echo "==> Cleaning up ${service_name}..."
-
-    if systemctl --user is-active --quiet "${systemd_service}.service" 2>/dev/null; then
-        echo "  -> Stopping ${systemd_service}.service"
-        systemctl --user stop "${systemd_service}.service" || true
-    fi
-
-    if systemctl --user is-enabled --quiet "${systemd_service}.service" 2>/dev/null; then
-        echo "  -> Disabling ${systemd_service}.service"
-        systemctl --user disable "${systemd_service}.service" || true
-    fi
-
-    if [ -f "${USER_SYSTEMD_DIR}/${systemd_service}.service" ]; then
-        echo "  -> Removing systemd service file"
-        rm -f "${USER_SYSTEMD_DIR}/${systemd_service}.service"
-    fi
-
-    if [ -f "${compose_file}" ]; then
-        echo "  -> Stopping and removing containers"
-        cd "${compose_dir}"
-        podman-compose -f "${compose_file}" down || true
-    fi
-}
-
-################################################################################
 # Function: setup_service <service-name> <temp-compose-filename>
 ################################################################################
 setup_service() {
@@ -111,15 +78,6 @@ if [ "$(id -u)" -eq 0 ]; then
     exit 1
 fi
 
-# Cleanup all services first
-for entry in "${SERVICES[@]}"; do
-    service_name="${entry%%:*}"
-    cleanup_service "${service_name}"
-done
-
-systemctl --user daemon-reload
-echo "==> Cleanup completed"
-
 # Setup all services
 for entry in "${SERVICES[@]}"; do
     service_name="${entry%%:*}"
@@ -142,5 +100,5 @@ done
 
 echo ""
 echo "==> Configuration complete!"
-echo "    - Nginx Proxy Manager admin UI: http://localhost:81"
-echo "    - AdGuard Home setup UI:        http://localhost:3000"
+echo "    - Nginx Proxy Manager admin UI: http://localhost:8081"
+echo "    - AdGuard Home setup UI:        http://localhost:8082"

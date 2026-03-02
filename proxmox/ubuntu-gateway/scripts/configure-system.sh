@@ -38,21 +38,18 @@ systemctl restart systemd-resolved
 # configure ufw firewall rules
 echo "[INFO] Configuring firewall rules.."
 
-# allow ufw packet forwarding (required for WireGuard)
-sed -i 's/^DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/' /etc/default/ufw
-
 # WireGuard
 ufw allow 51820/udp comment "WireGuard"
 
 # Nginx Proxy Manager
 ufw allow 80/tcp   comment "Nginx Proxy Manager - HTTP"
 ufw allow 443/tcp  comment "Nginx Proxy Manager - HTTPS"
-ufw allow 81/tcp   comment "Nginx Proxy Manager - Admin UI"
+ufw allow 8081/tcp   comment "Nginx Proxy Manager - UI"
 
 # AdGuard Home
 ufw allow 53/tcp   comment "AdGuard Home - DNS"
 ufw allow 53/udp   comment "AdGuard Home - DNS"
-ufw allow 3000/tcp comment "AdGuard Home - Setup UI"
+ufw allow 8082/tcp comment "AdGuard Home - UI"
 
 ufw reload
 
