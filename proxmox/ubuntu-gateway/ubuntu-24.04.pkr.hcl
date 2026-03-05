@@ -143,7 +143,7 @@ build {
     }
 
     provisioner "shell" {
-      inline = ["mkdir -p /tmp/docker"]
+      inline = ["mkdir -p /tmp/docker", "mkdir -p /tmp/ddclient"]
     }
 
     provisioner "file" {
@@ -160,6 +160,20 @@ build {
     provisioner "file" {
       destination = "/tmp/docker/adguard-home-docker-compose.yml"
       source      = "${path.root}/assets/docker/adguard-home-docker-compose.yml"
+    }
+
+    provisioner "file" {
+      destination = "/tmp/docker/ddclient-docker-compose.yml"
+      source      = "${path.root}/assets/docker/ddclient-docker-compose.yml"
+    }
+
+    provisioner "file" {
+      destination = "/tmp/ddclient/ddclient.conf"
+      content     = templatefile("${path.root}/assets/ddclient/ddclient.conf.pkrtpl.hcl", {
+        ddclient_cloudflare_zone      = var.ddclient_cloudflare_zone
+        ddclient_cloudflare_api_token = var.ddclient_cloudflare_api_token
+        ddclient_hostname             = var.ddclient_hostname
+      })
     }
 
     provisioner "shell" {

@@ -16,6 +16,7 @@ set -o pipefail  # Catch errors in piped commands
 SERVICES=(
     "nginx-proxy-manager:nginx-proxy-manager-docker-compose.yml"
     "adguard-home:adguard-home-docker-compose.yml"
+    "ddclient:ddclient-docker-compose.yml"
 )
 
 TEMP_DIR="/tmp/docker"
@@ -77,6 +78,13 @@ if [ "$(id -u)" -eq 0 ]; then
     echo "       Run it as a normal user with sudo privileges"
     exit 1
 fi
+
+# Pre-stage ddclient.conf before starting services so podman bind-mounts it as a file, not a directory
+echo "==> Copying ddclient.conf..."
+mkdir -p "${HOME}/.local/share/containers/ddclient"
+cp "/tmp/ddclient/ddclient.conf" "${HOME}/.local/share/containers/ddclient/ddclient.conf"
+chmod 600 "${HOME}/.local/share/containers/ddclient/ddclient.conf"
+echo "  -> ddclient.conf pre-staged"
 
 # Setup all services
 for entry in "${SERVICES[@]}"; do

@@ -148,6 +148,23 @@ variable "wireguard_server_public_key" {
   description = "The public key for the WireGuard server."
 }
 
+// DDCLIENT
+variable "ddclient_cloudflare_zone" {
+  type        = string
+  description = "The Cloudflare zone (domain) to update DNS records for."
+}
+
+variable "ddclient_cloudflare_api_token" {
+  type        = string
+  description = "The Cloudflare API token for ddclient authentication."
+  sensitive   = true
+}
+
+variable "ddclient_hostname" {
+  type        = string
+  description = "The hostname to update in Cloudflare DNS."
+}
+
 // WIREGUARD PEERS
 variable "wireguard_peers" {
   type = list(object({

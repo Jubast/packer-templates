@@ -35,6 +35,11 @@ npm_db_mysql_user                           = "npm"
 npm_db_mysql_password                       = "mySecureNpmDbPassword"
 npm_db_mysql_name                           = "npm"
 
+# DDCLIENT
+ddclient_cloudflare_zone      = "example.com"
+ddclient_cloudflare_api_token = "your_cloudflare_api_token_here"
+ddclient_hostname             = "subdomain.example.com"
+
 # WIREGUARD
 wireguard_server_network_interface          = "eth0"
 wireguard_server_address_ipv4               = "10.10.0.1"

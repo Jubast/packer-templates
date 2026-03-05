@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  ddclient:
+    image: lscr.io/linuxserver/ddclient:4.0.0
+    container_name: ddclient
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./ddclient.conf:/config/ddclient.conf
+    healthcheck:
+      test: ["CMD", "pgrep", "-x", "ddclient"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 64M
+        reservations:
+          cpus: '0.05'
+          memory: 16M
