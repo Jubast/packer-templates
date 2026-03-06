@@ -1,0 +1,29 @@
+version: '3'
+
+volumes:
+  adguard-home-work:
+  adguard-home-conf:
+
+services:
+  adguard-home:
+    image: docker.io/adguard/adguardhome:v0.107.72
+    restart: unless-stopped
+    ports:
+      - ${wireguard_server_address_ipv4}:53:53/tcp
+      - ${wireguard_server_address_ipv4}:53:53/udp
+      - 8082:3000/tcp
+    volumes:
+      - adguard-home-work:/opt/adguardhome/work
+      - adguard-home-conf:/opt/adguardhome/conf
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      start_period: 1m
+      start_interval: 10s
+      interval: 1m
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M

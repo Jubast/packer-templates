@@ -106,11 +106,8 @@ build {
     }
 
     provisioner "shell" {      
-      execute_command  = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-      script           = "${path.root}/scripts/configure-system.sh"
-      environment_vars = [
-        "WIREGUARD_SERVER_ADDRESS_IPV4=${var.wireguard_server_address_ipv4}"
-      ]
+      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
+      script          = "${path.root}/scripts/configure-system.sh"
     }
 
     provisioner "shell" {
@@ -162,7 +159,9 @@ build {
 
     provisioner "file" {
       destination = "/tmp/docker/adguard-home-docker-compose.yml"
-      source      = "${path.root}/assets/docker/adguard-home-docker-compose.yml"
+      content     = templatefile("${path.root}/assets/docker/adguard-home-docker-compose.yml.pkrtpl.hcl", {
+        wireguard_server_address_ipv4 = var.wireguard_server_address_ipv4
+      })
     }
 
     provisioner "file" {

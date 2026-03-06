@@ -37,7 +37,6 @@ echo "net.ipv4.ip_unprivileged_port_start=53" >> /etc/sysctl.conf
 # configure systemd-resolved to use AdGuard Home as upstream DNS
 echo "[INFO] Configuring systemd-resolved to use AdGuard Home as upstream DNS.."
 sed -i 's/#DNS=/DNS=127.0.0.1:5353/' /etc/systemd/resolved.conf
-sed -i "s/#DNSStubListenerExtra=/DNSStubListenerExtra=${WIREGUARD_SERVER_ADDRESS_IPV4}/" /etc/systemd/resolved.conf
 systemctl restart systemd-resolved
 
 # configure ufw firewall rules
