@@ -106,8 +106,11 @@ build {
     }
 
     provisioner "shell" {      
-      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/configure-system.sh"
+      execute_command  = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
+      script           = "${path.root}/scripts/configure-system.sh"
+      environment_vars = [
+        "WIREGUARD_SERVER_ADDRESS_IPV4=${var.wireguard_server_address_ipv4}"
+      ]
     }
 
     provisioner "shell" {
