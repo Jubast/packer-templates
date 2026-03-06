@@ -26,13 +26,17 @@ systemctl start unattended-upgrades
 systemctl enable qemu-guest-agent
 systemctl start qemu-guest-agent
 
+# enable periodic TRIM for discard/SSD support
+systemctl enable fstrim.timer
+systemctl start fstrim.timer
+
 echo "[INFO] Configuring system.."
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 echo "net.ipv4.ip_unprivileged_port_start=53" >> /etc/sysctl.conf
 
-# disable systemd-resolved stub listener so AdGuard Home can bind to port 53
-echo "[INFO] Disabling systemd-resolved stub listener.."
-sed -i 's/#DNSStubListener=yes/DNSStubListener=no/' /etc/systemd/resolved.conf
+# configure systemd-resolved to use AdGuard Home as upstream DNS
+echo "[INFO] Configuring systemd-resolved to use AdGuard Home as upstream DNS.."
+sed -i 's/#DNS=/DNS=127.0.0.1:5353/' /etc/systemd/resolved.conf
 systemctl restart systemd-resolved
 
 # configure ufw firewall rules

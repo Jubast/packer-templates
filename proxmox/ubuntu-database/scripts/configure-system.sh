@@ -26,6 +26,10 @@ systemctl start unattended-upgrades
 systemctl enable qemu-guest-agent
 systemctl start qemu-guest-agent
 
+# enable periodic TRIM for discard/SSD support
+systemctl enable fstrim.timer
+systemctl start fstrim.timer
+
 # configure ufw firewall rules
 echo "[INFO] Configuring firewall rules.."
 

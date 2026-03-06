@@ -9,8 +9,8 @@ services:
     image: docker.io/adguard/adguardhome:v0.107.72
     restart: unless-stopped
     ports:
-      - 53:53/tcp
-      - 53:53/udp
+      - 5353:53/tcp
+      - 5353:53/udp
       - 8082:3000/tcp
     volumes:
       - adguard-home-work:/opt/adguardhome/work
