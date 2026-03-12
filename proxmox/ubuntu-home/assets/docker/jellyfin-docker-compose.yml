@@ -1,0 +1,35 @@
+version: '3'
+
+volumes:
+  jellyfin-config:
+  jellyfin-cache:
+
+services:
+  jellyfin:
+    image: docker.io/linuxserver/jellyfin:10.11.6
+    restart: unless-stopped
+    ports:
+      - 8096:8096    # HTTP web UI
+      - 8920:8920    # HTTPS web UI
+      - 7359:7359/udp  # local network discovery
+      - 1900:1900/udp  # DLNA
+    volumes:
+      - jellyfin-config:/config
+      - jellyfin-cache:/cache
+      - /srv/media:/media:ro
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8096/health"]
+      start_period: 1m
+      start_interval: 10s
+      interval: 1m
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
