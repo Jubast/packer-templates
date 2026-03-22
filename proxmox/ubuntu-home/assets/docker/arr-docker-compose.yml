@@ -16,9 +16,8 @@ services:
       - 9696:9696    # web UI
     volumes:
       - prowlarr-config:/config
+    userns_mode: keep-id
     environment:
-      PUID: 1000
-      PGID: 1000
       TZ: Etc/UTC
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9696/ping"]
@@ -41,12 +40,9 @@ services:
       - 8989:8989    # web UI
     volumes:
       - sonarr-config:/config
-      - /srv/media/tv:/tv
-      - /srv/downloads:/downloads
+      - /srv:/srv
     userns_mode: keep-id
     environment:
-      PUID: 1000
-      PGID: 1000
       TZ: Etc/UTC
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8989/ping"]
@@ -69,12 +65,9 @@ services:
       - 7878:7878    # web UI
     volumes:
       - radarr-config:/config
-      - /srv/media/movies:/movies
-      - /srv/downloads:/downloads
+      - /srv:/srv
     userns_mode: keep-id
     environment:
-      PUID: 1000
-      PGID: 1000
       TZ: Etc/UTC
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7878/ping"]
@@ -97,11 +90,9 @@ services:
       - 6767:6767    # web UI
     volumes:
       - bazarr-config:/config
-      - /srv/media/tv:/tv
-      - /srv/media/movies:/movies
+      - /srv:/srv
+    userns_mode: keep-id
     environment:
-      PUID: 1000
-      PGID: 1000
       TZ: Etc/UTC
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:6767/"]
@@ -124,6 +115,7 @@ services:
       - 5055:5055    # web UI
     volumes:
       - jellyseerr-config:/app/config
+    userns_mode: keep-id
     environment:
       TZ: Etc/UTC
       PORT: 5055
