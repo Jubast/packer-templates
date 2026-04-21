@@ -12,8 +12,8 @@ services:
       - 6379:6379
     volumes:
       - redis:/data
-    environment:
-      REDIS_PASSWORD: "${database_redis_password}"
+    env_file:
+      - .env
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
       start_period: 1m

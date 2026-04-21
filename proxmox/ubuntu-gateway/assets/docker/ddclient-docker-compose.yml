@@ -5,10 +5,8 @@ services:
     image: lscr.io/linuxserver/ddclient:4.0.0
     container_name: ddclient
     restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
+    env_file:
+      - .env
     volumes:
       - ./ddclient.conf:/config/ddclient.conf
     deploy:

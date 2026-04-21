@@ -127,14 +127,24 @@ build {
 
     provisioner "file" {
       destination = "/tmp/docker/mariadb-docker-compose.yml"
-      content     = templatefile("${path.root}/assets/docker/mariadb-docker-compose.yml.pkrtpl.hcl", {
+      source      = "${path.root}/assets/docker/mariadb-docker-compose.yml"
+    }
+
+    provisioner "file" {
+      destination = "/tmp/docker/mariadb.env"
+      content     = templatefile("${path.root}/assets/docker/mariadb.env.pkrtpl.hcl", {
         database_mariadb_root_password = var.database_mariadb_root_password
       })
     }
 
     provisioner "file" {
       destination = "/tmp/docker/redis-docker-compose.yml"
-      content     = templatefile("${path.root}/assets/docker/redis-docker-compose.yml.pkrtpl.hcl", {
+      source      = "${path.root}/assets/docker/redis-docker-compose.yml"
+    }
+
+    provisioner "file" {
+      destination = "/tmp/docker/redis.env"
+      content     = templatefile("${path.root}/assets/docker/redis.env.pkrtpl.hcl", {
         database_redis_password = var.database_redis_password
       })
     }

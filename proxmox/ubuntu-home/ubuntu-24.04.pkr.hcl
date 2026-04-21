@@ -132,13 +132,28 @@ build {
     }
 
     provisioner "file" {
+      destination = "/tmp/docker/jellyfin.env"
+      source      = "${path.root}/assets/docker/jellyfin.env"
+    }
+
+    provisioner "file" {
       destination = "/tmp/docker/arr-docker-compose.yml"
       source      = "${path.root}/assets/docker/arr-docker-compose.yml"
     }
 
     provisioner "file" {
+      destination = "/tmp/docker/arr.env"
+      source      = "${path.root}/assets/docker/arr.env"
+    }
+
+    provisioner "file" {
       destination = "/tmp/docker/qbittorrent-docker-compose.yml"
       source      = "${path.root}/assets/docker/qbittorrent-docker-compose.yml"
+    }
+
+    provisioner "file" {
+      destination = "/tmp/docker/qbittorrent.env"
+      source      = "${path.root}/assets/docker/qbittorrent.env"
     }
 
     provisioner "shell" {
