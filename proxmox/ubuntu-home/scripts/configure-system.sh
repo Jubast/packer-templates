@@ -34,7 +34,9 @@ systemctl start fstrim.timer
 
 # create media and download directories
 echo "[INFO] Creating media directories.."
+mkdir -p /srv/media/home
 mkdir -p /srv/media/movies
+mkdir -p /srv/media/anime
 mkdir -p /srv/media/tv
 mkdir -p /srv/media/music
 mkdir -p /srv/downloads
