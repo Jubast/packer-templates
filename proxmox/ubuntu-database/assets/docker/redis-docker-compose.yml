@@ -6,16 +6,15 @@ volumes:
 services:
   redis:
     image: docker.io/redis:7.4.8-alpine
-    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"
+    command: redis-server /usr/local/etc/redis/redis.conf
     restart: unless-stopped
     ports:
       - 6379:6379
     volumes:
       - redis:/data
-    env_file:
-      - .env
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
     healthcheck:
-      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      test: ["CMD", "redis-cli", "ping"]
       start_period: 1m
       start_interval: 10s
       interval: 1m

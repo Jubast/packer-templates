@@ -92,9 +92,16 @@ variable "database_mariadb_root_password" {
   description = "The root password for the MariaDB database."
 }
 
-variable "database_redis_password" {
+variable "database_redis_nextcloud_password" {
   type = string
-  description = "The password for the Redis database."
+  description = "The password for the Redis nextcloud user."
+  sensitive = true
+}
+
+variable "database_redis_onlyoffice_password" {
+  type = string
+  description = "The password for the Redis onlyoffice user."
+  sensitive = true
 }
 
 variable "database_rabbitmq_default_user" {

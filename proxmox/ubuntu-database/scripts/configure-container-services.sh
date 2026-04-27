@@ -50,6 +50,12 @@ setup_service() {
         chmod 600 "${compose_dir}/.env"
     fi
 
+    local temp_conf_file="${TEMP_DIR}/${service_name}.conf"
+    if [ -f "${temp_conf_file}" ]; then
+        cp "${temp_conf_file}" "${compose_dir}/${service_name}.conf"
+        chmod 640 "${compose_dir}/${service_name}.conf"
+    fi
+
     mkdir -p "${USER_SYSTEMD_DIR}"
     cat > "${USER_SYSTEMD_DIR}/${systemd_service}.service" <<EOF
 [Unit]

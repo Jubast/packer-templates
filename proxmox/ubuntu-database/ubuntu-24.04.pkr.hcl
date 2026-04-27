@@ -143,9 +143,10 @@ build {
     }
 
     provisioner "file" {
-      destination = "/tmp/docker/redis.env"
-      content     = templatefile("${path.root}/assets/docker/redis.env.pkrtpl.hcl", {
-        database_redis_password = var.database_redis_password
+      destination = "/tmp/docker/redis.conf"
+      content     = templatefile("${path.root}/assets/docker/redis.conf.pkrtpl.hcl", {
+        database_redis_nextcloud_password  = var.database_redis_nextcloud_password
+        database_redis_onlyoffice_password = var.database_redis_onlyoffice_password
       })
     }
 
