@@ -5,10 +5,11 @@ volumes:
 
 services:
   rabbitmq:
-    image: docker.io/rabbitmq:4.3.0-alpine
+    image: docker.io/rabbitmq:4.3.0-management-alpine
     restart: unless-stopped
     ports:
       - 5672:5672
+      - 15672:15672
     volumes:
       - rabbitmq:/var/lib/rabbitmq
     env_file:

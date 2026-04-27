@@ -41,6 +41,7 @@ ufw allow 6379/tcp comment "Redis"
 
 # RabbitMQ
 ufw allow 5672/tcp comment "RabbitMQ"
+ufw allow 15672/tcp comment "RabbitMQ Management UI"
 
 ufw reload
 
