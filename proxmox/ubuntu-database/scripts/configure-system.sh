@@ -39,6 +39,9 @@ ufw allow 3306/tcp comment "MariaDB"
 # Redis
 ufw allow 6379/tcp comment "Redis"
 
+# RabbitMQ
+ufw allow 5672/tcp comment "RabbitMQ"
+
 ufw reload
 
 # tests

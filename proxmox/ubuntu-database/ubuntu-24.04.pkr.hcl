@@ -149,6 +149,19 @@ build {
       })
     }
 
+    provisioner "file" {
+      destination = "/tmp/docker/rabbitmq-docker-compose.yml"
+      source      = "${path.root}/assets/docker/rabbitmq-docker-compose.yml"
+    }
+
+    provisioner "file" {
+      destination = "/tmp/docker/rabbitmq.env"
+      content     = templatefile("${path.root}/assets/docker/rabbitmq.env.pkrtpl.hcl", {
+        database_rabbitmq_default_user     = var.database_rabbitmq_default_user
+        database_rabbitmq_default_password = var.database_rabbitmq_default_password
+      })
+    }
+
     provisioner "shell" {
       execute_command = "sh -c '{{ .Vars }} {{ .Path }}'"
       script          = "${path.root}/scripts/configure-container-services.sh"

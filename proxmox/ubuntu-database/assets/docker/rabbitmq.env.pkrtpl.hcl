@@ -1,0 +1,2 @@
+RABBITMQ_DEFAULT_USER=${database_rabbitmq_default_user}
+RABBITMQ_DEFAULT_PASS=${database_rabbitmq_default_password}

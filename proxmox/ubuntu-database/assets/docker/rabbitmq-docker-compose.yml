@@ -1,20 +1,20 @@
 version: '3'
 
 volumes:
-  mariadb:
+  rabbitmq:
 
 services:
-  mariadb:
-    image: docker.io/mariadb:10.6.25
+  rabbitmq:
+    image: docker.io/rabbitmq:4.3.0-alpine
     restart: unless-stopped
     ports:
-      - 3306:3306
+      - 5672:5672
     volumes:
-      - mariadb:/var/lib/mysql
+      - rabbitmq:/var/lib/rabbitmq
     env_file:
       - .env
     healthcheck:
-      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
       start_period: 1m
       start_interval: 10s
       interval: 1m
@@ -24,4 +24,4 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 300M
+          memory: 256M

@@ -96,3 +96,14 @@ variable "database_redis_password" {
   type = string
   description = "The password for the Redis database."
 }
+
+variable "database_rabbitmq_default_user" {
+  type = string
+  description = "The default username for the RabbitMQ broker."
+}
+
+variable "database_rabbitmq_default_password" {
+  type = string
+  description = "The default password for the RabbitMQ broker."
+  sensitive = true
+}

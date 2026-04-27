@@ -16,6 +16,7 @@ set -o pipefail  # Catch errors in piped commands
 SERVICES=(
     "mariadb:mariadb-docker-compose.yml"
     "redis:redis-docker-compose.yml"
+    "rabbitmq:rabbitmq-docker-compose.yml"
 )
 
 TEMP_DIR="/tmp/docker"
@@ -106,5 +107,6 @@ done
 
 echo ""
 echo "==> Configuration complete!"
-echo "    - MariaDB: localhost:3306"
-echo "    - Redis:   localhost:6379"
+echo "    - MariaDB:  localhost:3306"
+echo "    - Redis:    localhost:6379"
+echo "    - RabbitMQ: localhost:5672 (AMQP)"
