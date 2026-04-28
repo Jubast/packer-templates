@@ -17,8 +17,10 @@ services:
       - jellyfin-config:/config
       - jellyfin-cache:/cache
       - /srv/media:/media
-    env_file:
-      - .env
+    environment:
+      PUID: 0
+      PGID: 0
+      TZ: Etc/UTC
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8096/health"]
       start_period: 1m
@@ -30,4 +32,4 @@ services:
       resources:
         limits:
           cpus: '2.0'
-          memory: 2G
+          memory: 512G

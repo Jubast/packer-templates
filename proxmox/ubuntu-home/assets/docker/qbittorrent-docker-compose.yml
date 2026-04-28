@@ -14,8 +14,12 @@ services:
     volumes:
       - qbittorrent-config:/config
       - /srv/downloads:/downloads
-    env_file:
-      - .env
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
+      WEBUI_PORT: 8080
+      TORRENTING_PORT: 6881
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       start_period: 1m
@@ -27,4 +31,4 @@ services:
       resources:
         limits:
           cpus: '1.0'
-          memory: 512M
+          memory: 256M

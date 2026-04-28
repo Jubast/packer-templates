@@ -17,8 +17,8 @@ services:
     volumes:
       - prowlarr-config:/config
     userns_mode: keep-id
-    env_file:
-      - .env
+    environment:
+      TZ: Etc/UTC
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9696/ping"]
       start_period: 1m
@@ -30,7 +30,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 256M
+          memory: 128M
 
   # TvShow management
   sonarr:
@@ -42,8 +42,8 @@ services:
       - sonarr-config:/config
       - /srv:/srv
     userns_mode: keep-id
-    env_file:
-      - .env
+    environment:
+      TZ: Etc/UTC
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8989/ping"]
       start_period: 1m
@@ -55,7 +55,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 256M
+          memory: 128M
 
   # Movie management
   radarr:
@@ -67,8 +67,8 @@ services:
       - radarr-config:/config
       - /srv:/srv
     userns_mode: keep-id
-    env_file:
-      - .env
+    environment:
+      TZ: Etc/UTC
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7878/ping"]
       start_period: 1m
@@ -80,7 +80,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 256M
+          memory: 128M
 
   # Subtitle management
   bazarr:
@@ -92,8 +92,8 @@ services:
       - bazarr-config:/config
       - /srv:/srv
     userns_mode: keep-id
-    env_file:
-      - .env
+    environment:
+      TZ: Etc/UTC
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:6767/"]
       start_period: 1m
@@ -116,8 +116,9 @@ services:
     volumes:
       - jellyseerr-config:/app/config
     userns_mode: keep-id
-    env_file:
-      - .env
+    environment:
+      TZ: Etc/UTC
+      PORT: 5055
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5055/api/v1/status"]
       start_period: 20s
