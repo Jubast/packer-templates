@@ -1,0 +1,28 @@
+version: '3'
+
+volumes:
+  vaultwarden-data:
+
+services:
+  vaultwarden:
+    image: docker.io/vaultwarden/server:1.35.7-alpine
+    restart: unless-stopped
+    ports:
+      - 8081:80    # web UI & API
+      - 3012:3012  # WebSocket notifications
+    volumes:
+      - vaultwarden-data:/data
+    env_file:
+      - vaultwarden.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/alive"]
+      start_period: 1m
+      start_interval: 10s
+      interval: 1m
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M

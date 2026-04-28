@@ -9,9 +9,10 @@ set -u  # Treat unset variables as errors
 set -o pipefail  # Catch errors in piped commands
 
 if [[ $# -lt 1 ]]; then
-    echo "Usage: $0 {build-database|build-gateway|build-home}"
+    echo "Usage: $0 {build-cloud|build-database|build-gateway|build-home}"
     echo ""
     echo "Examples:"
+    echo "  $0 build-cloud      # Build cloud VM with Proxmox"
     echo "  $0 build-database   # Build database VM with Proxmox"
     echo "  $0 build-gateway    # Build gateway VM with Proxmox"
     echo "  $0 build-home       # Build home VM with Proxmox"
@@ -23,6 +24,11 @@ COMMAND="$1"
 echo "==> Using builder: proxmox"
 
 case "${COMMAND}" in
+    build-cloud)
+        cd "./proxmox/ubuntu-cloud"
+        packer build -force -var-file="ubuntu-24.04.auto.pkrvars.hcl" .
+        exit 0
+        ;;
     build-database)
         cd "./proxmox/ubuntu-database"
         packer build -force -var-file="ubuntu-24.04.auto.pkrvars.hcl" .
