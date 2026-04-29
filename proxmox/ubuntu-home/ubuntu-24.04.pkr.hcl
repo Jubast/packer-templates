@@ -47,7 +47,7 @@ source "proxmox-iso" "ubuntu-home" {
     # VM Hard Disk Settings
     scsi_controller          = "virtio-scsi-single"
     disks {
-        disk_size            = "256G"
+        disk_size            = "512G"
         storage_pool         = var.storage_pool
         type                 = "scsi"
         format               = "raw"
