@@ -77,6 +77,58 @@ EOF
 }
 
 ################################################################################
+# Function: setup_healthcheck_watcher
+# Creates a script + systemd service+timer that restarts unhealthy containers.
+################################################################################
+setup_healthcheck_watcher() {
+    local script_dir="${HOME}/.local/bin"
+    local script_path="${script_dir}/container-healthcheck.sh"
+    local systemd_service="container-healthcheck"
+
+    echo "==> Setting up container healthcheck watcher..."
+
+    mkdir -p "${script_dir}"
+    cat > "${script_path}" <<'HEALTHCHECK_EOF'
+#!/bin/bash
+# Restart any podman containers whose health check is reporting unhealthy.
+unhealthy=$(podman ps --filter health=unhealthy --format '{{.Names}}')
+for container in ${unhealthy}; do
+    echo "$(date --iso-8601=seconds) Restarting unhealthy container: ${container}"
+    podman restart "${container}"
+done
+HEALTHCHECK_EOF
+    chmod 755 "${script_path}"
+
+    mkdir -p "${USER_SYSTEMD_DIR}"
+    cat > "${USER_SYSTEMD_DIR}/${systemd_service}.service" <<EOF
+[Unit]
+Description=Restart unhealthy podman containers
+
+[Service]
+Type=oneshot
+ExecStart=${script_path}
+EOF
+
+    cat > "${USER_SYSTEMD_DIR}/${systemd_service}.timer" <<EOF
+[Unit]
+Description=Check and restart unhealthy podman containers every 2 minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=2min
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+
+    systemctl --user daemon-reload
+    systemctl --user enable "${systemd_service}.timer"
+    systemctl --user start "${systemd_service}.timer"
+    echo "  -> Enabled and started ${systemd_service}.timer"
+}
+
+################################################################################
 # Main
 ################################################################################
 if [ "$(id -u)" -eq 0 ]; then
@@ -94,6 +146,8 @@ done
 
 echo "  -> Waiting for containers to become healthy..."
 sleep 15
+
+setup_healthcheck_watcher
 
 echo ""
 echo "==> Container Status:"
