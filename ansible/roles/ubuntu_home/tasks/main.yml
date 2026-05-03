@@ -126,6 +126,7 @@
     path: "{{ item }}"
     owner: "{{ container_user }}"
     group: "{{ container_user }}"
+    mode: '0755'
     state: directory
   loop:
     - /srv/media
@@ -137,14 +138,14 @@
 # ===========================================================================
 - name: Create jellyfin compose directory
   ansible.builtin.file:
-    path: "{{ compose_base_dir }}/jellyfin"
+    path: "{{ common_compose_base_dir }}/jellyfin"
     state: directory
     mode: '0755'
 
 - name: Copy jellyfin docker-compose.yml
   ansible.builtin.copy:
     src: jellyfin-docker-compose.yml
-    dest: "{{ compose_base_dir }}/jellyfin/docker-compose.yml"
+    dest: "{{ common_compose_base_dir }}/jellyfin/docker-compose.yml"
     mode: '0644'
   notify: Restart jellyfin container service
 
@@ -153,21 +154,21 @@
     name: common
     tasks_from: deploy_service
   vars:
-    service_name: jellyfin
+    common_service_name: jellyfin
 
 # ===========================================================================
 # Arr suite (Sonarr, Radarr, Prowlarr, Bazarr, Jellyseerr)
 # ===========================================================================
 - name: Create arr compose directory
   ansible.builtin.file:
-    path: "{{ compose_base_dir }}/arr"
+    path: "{{ common_compose_base_dir }}/arr"
     state: directory
     mode: '0755'
 
 - name: Copy arr docker-compose.yml
   ansible.builtin.copy:
     src: arr-docker-compose.yml
-    dest: "{{ compose_base_dir }}/arr/docker-compose.yml"
+    dest: "{{ common_compose_base_dir }}/arr/docker-compose.yml"
     mode: '0644'
   notify: Restart arr container service
 
@@ -176,21 +177,21 @@
     name: common
     tasks_from: deploy_service
   vars:
-    service_name: arr
+    common_service_name: arr
 
 # ===========================================================================
 # qBittorrent
 # ===========================================================================
 - name: Create qbittorrent compose directory
   ansible.builtin.file:
-    path: "{{ compose_base_dir }}/qbittorrent"
+    path: "{{ common_compose_base_dir }}/qbittorrent"
     state: directory
     mode: '0755'
 
 - name: Copy qbittorrent docker-compose.yml
   ansible.builtin.copy:
     src: qbittorrent-docker-compose.yml
-    dest: "{{ compose_base_dir }}/qbittorrent/docker-compose.yml"
+    dest: "{{ common_compose_base_dir }}/qbittorrent/docker-compose.yml"
     mode: '0644'
   notify: Restart qbittorrent container service
 
@@ -199,7 +200,7 @@
     name: common
     tasks_from: deploy_service
   vars:
-    service_name: qbittorrent
+    common_service_name: qbittorrent
 
 # ===========================================================================
 # Healthcheck watcher

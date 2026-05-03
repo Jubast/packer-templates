@@ -44,40 +44,40 @@
 # ===========================================================================
 - name: Create nextcloud compose directory
   ansible.builtin.file:
-    path: "{{ compose_base_dir }}/nextcloud"
+    path: "{{ common_compose_base_dir }}/nextcloud"
     state: directory
     mode: '0755'
 
 - name: Copy nextcloud docker-compose.yml
   ansible.builtin.copy:
     src: nextcloud-docker-compose.yml
-    dest: "{{ compose_base_dir }}/nextcloud/docker-compose.yml"
+    dest: "{{ common_compose_base_dir }}/nextcloud/docker-compose.yml"
     mode: '0644'
   notify: Restart nextcloud container service
 
 - name: Template nextcloud.env
   ansible.builtin.template:
     src: nextcloud.env.j2
-    dest: "{{ compose_base_dir }}/nextcloud/nextcloud.env"
+    dest: "{{ common_compose_base_dir }}/nextcloud/nextcloud.env"
     mode: '0600'
   notify: Restart nextcloud container service
 
 - name: Template onlyoffice.env
   ansible.builtin.template:
     src: onlyoffice.env.j2
-    dest: "{{ compose_base_dir }}/nextcloud/onlyoffice.env"
+    dest: "{{ common_compose_base_dir }}/nextcloud/onlyoffice.env"
     mode: '0600'
   notify: Restart nextcloud container service
 
 - name: Copy nextcloud-hooks directory
   ansible.builtin.copy:
     src: nextcloud-hooks/
-    dest: "{{ compose_base_dir }}/nextcloud/hooks/"
+    dest: "{{ common_compose_base_dir }}/nextcloud/hooks/"
     mode: preserve
 
 - name: Find hook scripts
   ansible.builtin.find:
-    paths: "{{ compose_base_dir }}/nextcloud/hooks"
+    paths: "{{ common_compose_base_dir }}/nextcloud/hooks"
     patterns: "*.sh"
     recurse: true
   register: _hook_scripts
@@ -93,28 +93,28 @@
     name: common
     tasks_from: deploy_service
   vars:
-    service_name: nextcloud
+    common_service_name: nextcloud
 
 # ===========================================================================
 # Vaultwarden
 # ===========================================================================
 - name: Create vaultwarden compose directory
   ansible.builtin.file:
-    path: "{{ compose_base_dir }}/vaultwarden"
+    path: "{{ common_compose_base_dir }}/vaultwarden"
     state: directory
     mode: '0755'
 
 - name: Copy vaultwarden docker-compose.yml
   ansible.builtin.copy:
     src: vaultwarden-docker-compose.yml
-    dest: "{{ compose_base_dir }}/vaultwarden/docker-compose.yml"
+    dest: "{{ common_compose_base_dir }}/vaultwarden/docker-compose.yml"
     mode: '0644'
   notify: Restart vaultwarden container service
 
 - name: Template vaultwarden.env
   ansible.builtin.template:
     src: vaultwarden.env.j2
-    dest: "{{ compose_base_dir }}/vaultwarden/vaultwarden.env"
+    dest: "{{ common_compose_base_dir }}/vaultwarden/vaultwarden.env"
     mode: '0600'
   notify: Restart vaultwarden container service
 
@@ -123,7 +123,7 @@
     name: common
     tasks_from: deploy_service
   vars:
-    service_name: vaultwarden
+    common_service_name: vaultwarden
 
 # ===========================================================================
 # Nextcloud cron timer
@@ -131,13 +131,13 @@
 - name: Copy Nextcloud cron service unit
   ansible.builtin.copy:
     src: nextcloud-cron.service
-    dest: "{{ user_systemd_dir }}/nextcloud-cron.service"
+    dest: "{{ common_user_systemd_dir }}/nextcloud-cron.service"
     mode: '0644'
 
 - name: Copy Nextcloud cron timer unit
   ansible.builtin.copy:
     src: nextcloud-cron.timer
-    dest: "{{ user_systemd_dir }}/nextcloud-cron.timer"
+    dest: "{{ common_user_systemd_dir }}/nextcloud-cron.timer"
     mode: '0644'
 
 - name: Enable and start Nextcloud cron timer

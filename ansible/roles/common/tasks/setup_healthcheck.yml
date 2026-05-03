@@ -5,19 +5,19 @@
 - name: Deploy container healthcheck script
   ansible.builtin.copy:
     src: container-healthcheck.sh
-    dest: "{{ user_bin_dir }}/container-healthcheck.sh"
+    dest: "{{ common_user_bin_dir }}/container-healthcheck.sh"
     mode: '0755'
 
 - name: Deploy container healthcheck service unit
   ansible.builtin.template:
     src: container-healthcheck.service.j2
-    dest: "{{ user_systemd_dir }}/container-healthcheck.service"
+    dest: "{{ common_user_systemd_dir }}/container-healthcheck.service"
     mode: '0644'
 
 - name: Deploy container healthcheck timer unit
   ansible.builtin.copy:
     src: container-healthcheck.timer
-    dest: "{{ user_systemd_dir }}/container-healthcheck.timer"
+    dest: "{{ common_user_systemd_dir }}/container-healthcheck.timer"
     mode: '0644'
 
 - name: Enable and start container healthcheck timer

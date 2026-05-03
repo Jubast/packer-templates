@@ -1,23 +1,23 @@
 ---
 container_user: "{{ ansible_user }}"
 
-compose_base_dir: "/home/{{ container_user }}/.local/share/containers"
-user_systemd_dir: "/home/{{ container_user }}/.config/systemd/user"
-user_bin_dir:     "/home/{{ container_user }}/.local/bin"
+common_compose_base_dir: "/home/{{ container_user }}/.local/share/containers"
+common_user_systemd_dir: "/home/{{ container_user }}/.config/systemd/user"
+common_user_bin_dir: "/home/{{ container_user }}/.local/bin"
 
 # ---------------------------------------------------------------------------
 # MariaDB
 # ---------------------------------------------------------------------------
-database_mariadb_root_password:      "ChangeMeToAStrongPassword123!"  # use ansible-vault
+database_mariadb_root_password: "ChangeMeToAStrongPassword123!"  # use ansible-vault
 
 # ---------------------------------------------------------------------------
 # Redis
 # ---------------------------------------------------------------------------
-database_redis_nextcloud_password:   "ChangeMeToAStrongPassword123!"  # use ansible-vault
-database_redis_onlyoffice_password:  "ChangeMeToAStrongPassword123!"  # use ansible-vault
+database_redis_nextcloud_password: "ChangeMeToAStrongPassword123!"  # use ansible-vault
+database_redis_onlyoffice_password: "ChangeMeToAStrongPassword123!"  # use ansible-vault
 
 # ---------------------------------------------------------------------------
 # RabbitMQ
 # ---------------------------------------------------------------------------
-database_rabbitmq_default_user:      "admin"
-database_rabbitmq_default_password:  "ChangeMeToAStrongPassword123!"  # use ansible-vault
+database_rabbitmq_default_user: "admin"
+database_rabbitmq_default_password: "ChangeMeToAStrongPassword123!"  # use ansible-vault

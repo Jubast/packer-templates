@@ -44,21 +44,21 @@
 # ===========================================================================
 - name: Create mariadb compose directory
   ansible.builtin.file:
-    path: "{{ compose_base_dir }}/mariadb"
+    path: "{{ common_compose_base_dir }}/mariadb"
     state: directory
     mode: '0755'
 
 - name: Copy mariadb docker-compose.yml
   ansible.builtin.copy:
     src: mariadb-docker-compose.yml
-    dest: "{{ compose_base_dir }}/mariadb/docker-compose.yml"
+    dest: "{{ common_compose_base_dir }}/mariadb/docker-compose.yml"
     mode: '0644'
   notify: Restart mariadb container service
 
 - name: Template mariadb .env
   ansible.builtin.template:
     src: mariadb.env.j2
-    dest: "{{ compose_base_dir }}/mariadb/.env"
+    dest: "{{ common_compose_base_dir }}/mariadb/.env"
     mode: '0600'
   notify: Restart mariadb container service
 
@@ -67,28 +67,28 @@
     name: common
     tasks_from: deploy_service
   vars:
-    service_name: mariadb
+    common_service_name: mariadb
 
 # ===========================================================================
 # Redis
 # ===========================================================================
 - name: Create redis compose directory
   ansible.builtin.file:
-    path: "{{ compose_base_dir }}/redis"
+    path: "{{ common_compose_base_dir }}/redis"
     state: directory
     mode: '0755'
 
 - name: Copy redis docker-compose.yml
   ansible.builtin.copy:
     src: redis-docker-compose.yml
-    dest: "{{ compose_base_dir }}/redis/docker-compose.yml"
+    dest: "{{ common_compose_base_dir }}/redis/docker-compose.yml"
     mode: '0644'
   notify: Restart redis container service
 
 - name: Template redis.conf
   ansible.builtin.template:
     src: redis.conf.j2
-    dest: "{{ compose_base_dir }}/redis/redis.conf"
+    dest: "{{ common_compose_base_dir }}/redis/redis.conf"
     mode: '0644'
   notify: Restart redis container service
 
@@ -97,28 +97,28 @@
     name: common
     tasks_from: deploy_service
   vars:
-    service_name: redis
+    common_service_name: redis
 
 # ===========================================================================
 # RabbitMQ
 # ===========================================================================
 - name: Create rabbitmq compose directory
   ansible.builtin.file:
-    path: "{{ compose_base_dir }}/rabbitmq"
+    path: "{{ common_compose_base_dir }}/rabbitmq"
     state: directory
     mode: '0755'
 
 - name: Copy rabbitmq docker-compose.yml
   ansible.builtin.copy:
     src: rabbitmq-docker-compose.yml
-    dest: "{{ compose_base_dir }}/rabbitmq/docker-compose.yml"
+    dest: "{{ common_compose_base_dir }}/rabbitmq/docker-compose.yml"
     mode: '0644'
   notify: Restart rabbitmq container service
 
 - name: Template rabbitmq .env
   ansible.builtin.template:
     src: rabbitmq.env.j2
-    dest: "{{ compose_base_dir }}/rabbitmq/.env"
+    dest: "{{ common_compose_base_dir }}/rabbitmq/.env"
     mode: '0600'
   notify: Restart rabbitmq container service
 
@@ -127,7 +127,7 @@
     name: common
     tasks_from: deploy_service
   vars:
-    service_name: rabbitmq
+    common_service_name: rabbitmq
 
 # ===========================================================================
 # Healthcheck watcher

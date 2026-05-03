@@ -135,21 +135,21 @@
 # ===========================================================================
 - name: Create nginx-proxy-manager compose directory
   ansible.builtin.file:
-    path: "{{ compose_base_dir }}/nginx-proxy-manager"
+    path: "{{ common_compose_base_dir }}/nginx-proxy-manager"
     state: directory
     mode: '0755'
 
 - name: Copy nginx-proxy-manager docker-compose.yml
   ansible.builtin.copy:
     src: nginx-proxy-manager-docker-compose.yml
-    dest: "{{ compose_base_dir }}/nginx-proxy-manager/docker-compose.yml"
+    dest: "{{ common_compose_base_dir }}/nginx-proxy-manager/docker-compose.yml"
     mode: '0644'
   notify: Restart nginx-proxy-manager container service
 
 - name: Template nginx-proxy-manager .env
   ansible.builtin.template:
     src: nginx-proxy-manager.env.j2
-    dest: "{{ compose_base_dir }}/nginx-proxy-manager/.env"
+    dest: "{{ common_compose_base_dir }}/nginx-proxy-manager/.env"
     mode: '0600'
   notify: Restart nginx-proxy-manager container service
 
@@ -158,21 +158,21 @@
     name: common
     tasks_from: deploy_service
   vars:
-    service_name: nginx-proxy-manager
+    common_service_name: nginx-proxy-manager
 
 # ===========================================================================
 # AdGuard Home
 # ===========================================================================
 - name: Create adguard-home compose directory
   ansible.builtin.file:
-    path: "{{ compose_base_dir }}/adguard-home"
+    path: "{{ common_compose_base_dir }}/adguard-home"
     state: directory
     mode: '0755'
 
 - name: Template adguard-home docker-compose.yml
   ansible.builtin.template:
     src: adguard-home-docker-compose.yml.j2
-    dest: "{{ compose_base_dir }}/adguard-home/docker-compose.yml"
+    dest: "{{ common_compose_base_dir }}/adguard-home/docker-compose.yml"
     mode: '0644'
   notify: Restart adguard-home container service
 
@@ -181,7 +181,7 @@
     name: common
     tasks_from: deploy_service
   vars:
-    service_name: adguard-home
+    common_service_name: adguard-home
 
 # ===========================================================================
 # ddclient  (conf must be in place before container starts to avoid podman
@@ -189,27 +189,27 @@
 # ===========================================================================
 - name: Create ddclient compose directory
   ansible.builtin.file:
-    path: "{{ compose_base_dir }}/ddclient"
+    path: "{{ common_compose_base_dir }}/ddclient"
     state: directory
     mode: '0755'
 
 - name: Template ddclient.conf
   ansible.builtin.template:
     src: ddclient.conf.j2
-    dest: "{{ compose_base_dir }}/ddclient/ddclient.conf"
+    dest: "{{ common_compose_base_dir }}/ddclient/ddclient.conf"
     mode: '0600'
 
 - name: Copy ddclient docker-compose.yml
   ansible.builtin.copy:
     src: ddclient-docker-compose.yml
-    dest: "{{ compose_base_dir }}/ddclient/docker-compose.yml"
+    dest: "{{ common_compose_base_dir }}/ddclient/docker-compose.yml"
     mode: '0644'
   notify: Restart ddclient container service
 
 - name: Copy ddclient .env
   ansible.builtin.copy:
     src: ddclient.env
-    dest: "{{ compose_base_dir }}/ddclient/.env"
+    dest: "{{ common_compose_base_dir }}/ddclient/.env"
     mode: '0600'
 
 - name: Deploy ddclient systemd service
@@ -217,7 +217,7 @@
     name: common
     tasks_from: deploy_service
   vars:
-    service_name: ddclient
+    common_service_name: ddclient
 
 # ===========================================================================
 # Healthcheck watcher

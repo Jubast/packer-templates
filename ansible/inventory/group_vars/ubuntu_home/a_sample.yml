@@ -1,8 +1,8 @@
 ---
 container_user: "{{ ansible_user }}"
 
-compose_base_dir: "/home/{{ container_user }}/.local/share/containers"
-user_systemd_dir: "/home/{{ container_user }}/.config/systemd/user"
-user_bin_dir:     "/home/{{ container_user }}/.local/bin"
+common_compose_base_dir: "/home/{{ container_user }}/.local/share/containers"
+common_user_systemd_dir: "/home/{{ container_user }}/.config/systemd/user"
+common_user_bin_dir: "/home/{{ container_user }}/.local/bin"
 
 media_timezone: "Etc/UTC"

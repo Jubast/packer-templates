@@ -68,23 +68,24 @@
 
 - name: Enable user lingering for {{ container_user }}
   ansible.builtin.command: loginctl enable-linger {{ container_user }}
+  changed_when: true
   when: not _linger_stat.stat.exists
   become: true
 
 - name: Create user systemd directory
   ansible.builtin.file:
-    path: "{{ user_systemd_dir }}"
+    path: "{{ common_user_systemd_dir }}"
     state: directory
     mode: '0755'
 
 - name: Create user local bin directory
   ansible.builtin.file:
-    path: "{{ user_bin_dir }}"
+    path: "{{ common_user_bin_dir }}"
     state: directory
     mode: '0755'
 
 - name: Create containers base directory
   ansible.builtin.file:
-    path: "{{ compose_base_dir }}"
+    path: "{{ common_compose_base_dir }}"
     state: directory
     mode: '0755'

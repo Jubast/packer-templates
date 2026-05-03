@@ -69,7 +69,7 @@ services:
     volumes:
       - onlyoffice-logs:/var/log/onlyoffice
       - onlyoffice-data:/var/www/onlyoffice/Data
-      - onlyoffice-fonts:/usr/share/fonts/truetype/custom      
+      - onlyoffice-fonts:/usr/share/fonts/truetype/custom
       - onlyoffice-lib-onlyoffice:/var/lib/onlyoffice
       - onlyoffice-lib-postgresql:/var/lib/postgresql
       - onlyoffice-lib-rabbitmq:/var/lib/rabbitmq

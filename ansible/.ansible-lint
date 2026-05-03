@@ -1,0 +1,12 @@
+---
+exclude_paths:
+  # Sample files are reference documentation with intentional aligned spacing
+  - inventory/group_vars/ubuntu_cloud/a_sample.yml
+  - inventory/group_vars/ubuntu_database/a_sample.yml
+  - inventory/group_vars/ubuntu_gateway/a_sample.yml
+  - inventory/group_vars/ubuntu_home/a_sample.yml
+
+skip_list:
+  # compose_base_dir, user_systemd_dir, user_bin_dir are intentionally shared
+  # cross-role variables — the no-role-prefix rule does not apply here.
+  - var-naming[no-role-prefix]
