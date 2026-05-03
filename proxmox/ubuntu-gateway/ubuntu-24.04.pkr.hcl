@@ -4,6 +4,10 @@ packer {
       source  = "github.com/hashicorp/proxmox"
       version = "~> 1.2"
     }
+    ansible = {
+      source  = "github.com/hashicorp/ansible"
+      version = "~> 1.1"
+    }
   }
 }
 
@@ -61,7 +65,7 @@ source "proxmox-iso" "ubuntu-gateway" {
     cpu_type                 = "x86-64-v2-AES"
 
     # VM Memory Settings
-    memory                   = 2048
+    memory                   = 1024
 
     # VM Network Settings
     network_adapters {
@@ -98,99 +102,21 @@ source "proxmox-iso" "ubuntu-gateway" {
 build {
     sources = [ "sources.proxmox-iso.ubuntu-gateway" ]
 
-    # wait for cloud-init to successfully finish
+    # Wait for cloud-init to finish before Ansible connects.
     provisioner "shell" {
       inline = [
         "cloud-init status --wait > /dev/null 2>&1"
       ]
     }
 
-    provisioner "shell" {      
-      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/configure-system.sh"
-    }
-
-    provisioner "shell" {
-      inline = ["mkdir -p /tmp/wireguard"]
-    }
-
-    provisioner "file" {
-      destination = "/tmp/wireguard/wg0.conf"
-      content = templatefile("${path.root}/assets/wireguard/wg0.conf.pkrtpl.hcl", {
-        wireguard_server_network_interface        = var.wireguard_server_network_interface
-        wireguard_server_address_ipv4             = var.wireguard_server_address_ipv4
-        wireguard_server_subnet_address_ipv4      = var.wireguard_server_subnet_address_ipv4
-        wireguard_server_listen_port              = var.wireguard_server_listen_port
-        wireguard_server_private_key              = var.wireguard_server_private_key
-        wireguard_peers                           = var.wireguard_peers
-      })
-    }
-
-    provisioner "shell" {
-      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/install-wireguard.sh"
-    }
-
-    provisioner "shell" {
-      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/install-container-tools.sh"
-    }
-
-    provisioner "shell" {
-      environment_vars = ["FOR_USER=${var.user_username}"]
-      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/enable-user-lingering.sh"
-    }
-
-    provisioner "shell" {
-      inline = ["mkdir -p /tmp/docker", "mkdir -p /tmp/ddclient"]
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/nginx-proxy-manager-docker-compose.yml"
-      source      = "${path.root}/assets/docker/nginx-proxy-manager-docker-compose.yml"
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/nginx-proxy-manager.env"
-      content     = templatefile("${path.root}/assets/docker/nginx-proxy-manager.env.pkrtpl.hcl", {
-        npm_db_mysql_host     = var.npm_db_mysql_host
-        npm_db_mysql_port     = var.npm_db_mysql_port
-        npm_db_mysql_user     = var.npm_db_mysql_user
-        npm_db_mysql_password = var.npm_db_mysql_password
-        npm_db_mysql_name     = var.npm_db_mysql_name
-      })
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/adguard-home-docker-compose.yml"
-      content     = templatefile("${path.root}/assets/docker/adguard-home-docker-compose.yml.pkrtpl.hcl", {
-        wireguard_server_address_ipv4 = var.wireguard_server_address_ipv4
-      })
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/ddclient-docker-compose.yml"
-      source      = "${path.root}/assets/docker/ddclient-docker-compose.yml"
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/ddclient.env"
-      source      = "${path.root}/assets/docker/ddclient.env"
-    }
-
-    provisioner "file" {
-      destination = "/tmp/ddclient/ddclient.conf"
-      content     = templatefile("${path.root}/assets/ddclient/ddclient.conf.pkrtpl.hcl", {
-        ddclient_cloudflare_zone      = var.ddclient_cloudflare_zone
-        ddclient_cloudflare_api_token = var.ddclient_cloudflare_api_token
-        ddclient_hostname             = var.ddclient_hostname
-      })
-    }
-
-    provisioner "shell" {
-      execute_command = "sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/configure-container-services.sh"
+    # Run the Ansible playbook — same playbook used for ongoing maintenance.
+    provisioner "ansible" {
+      playbook_file = "${path.root}/../../ansible/playbooks/configure-gateway.yml"
+      user          = var.user_username
+      extra_arguments = [
+        "--extra-vars", "@${path.root}/../../ansible/group_vars/ubuntu_gateway/main.yml",
+        "--extra-vars", "container_user=${var.user_username}"
+      ]
     }
 
     # Remove NOPASSWD sudo privilege as final step

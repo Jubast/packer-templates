@@ -1,0 +1,24 @@
+---
+- name: Restart jellyfin container service
+  ansible.builtin.systemd:
+    name: podman-compose-jellyfin.service
+    state: restarted
+    scope: user
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+
+- name: Restart arr container service
+  ansible.builtin.systemd:
+    name: podman-compose-arr.service
+    state: restarted
+    scope: user
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+
+- name: Restart qbittorrent container service
+  ansible.builtin.systemd:
+    name: podman-compose-qbittorrent.service
+    state: restarted
+    scope: user
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"

@@ -85,10 +85,3 @@ variable "user_ssh_authorized_keys" {
   type = string
   description = "The SSH authorized keys for the user."
 }
-
-// MEDIA
-variable "media_timezone" {
-  type = string
-  description = "Timezone used by media containers (e.g. Europe/Ljubljana)."
-  default = "Etc/UTC"
-}

@@ -1,0 +1,24 @@
+---
+- name: Restart mariadb container service
+  ansible.builtin.systemd:
+    name: podman-compose-mariadb.service
+    state: restarted
+    scope: user
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+
+- name: Restart redis container service
+  ansible.builtin.systemd:
+    name: podman-compose-redis.service
+    state: restarted
+    scope: user
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+
+- name: Restart rabbitmq container service
+  ansible.builtin.systemd:
+    name: podman-compose-rabbitmq.service
+    state: restarted
+    scope: user
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"

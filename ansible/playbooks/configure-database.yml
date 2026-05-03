@@ -1,0 +1,8 @@
+---
+- name: Configure ubuntu-database VM
+  hosts: ubuntu_database
+  gather_facts: true
+
+  roles:
+    - common
+    - ubuntu_database

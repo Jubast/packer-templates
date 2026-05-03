@@ -1,0 +1,39 @@
+---
+# The container user runs all podman services.  Must match ansible_user.
+container_user: "{{ ansible_user }}"
+
+# Directory paths derived from container_user.
+compose_base_dir: "/home/{{ container_user }}/.local/share/containers"
+user_systemd_dir: "/home/{{ container_user }}/.config/systemd/user"
+user_bin_dir:     "/home/{{ container_user }}/.local/bin"
+
+# ---------------------------------------------------------------------------
+# Nextcloud
+# ---------------------------------------------------------------------------
+cloud_nextcloud_db_host:        "192.168.1.x"     # IP of ubuntu-database
+cloud_nextcloud_db_name:        "nextcloud"
+cloud_nextcloud_db_user:        "nextcloud"
+cloud_nextcloud_db_password:    "ChangeMeToAStrongPassword123!"   # use ansible-vault
+cloud_nextcloud_redis_password: "ChangeMeToAStrongPassword123!"   # use ansible-vault
+cloud_nextcloud_admin_password: "ChangeMeToAStrongPassword123!"   # use ansible-vault
+cloud_nextcloud_trusted_proxies: "127.0.0.1"
+cloud_nextcloud_trusted_domains: "localhost"
+
+# ---------------------------------------------------------------------------
+# OnlyOffice
+# ---------------------------------------------------------------------------
+cloud_onlyoffice_jwt_secret:    "ChangeMeToAStrongRandomSecret123!"  # use ansible-vault
+cloud_onlyoffice_db_host:       "192.168.1.x"     # IP of ubuntu-database
+cloud_onlyoffice_db_name:       "onlyoffice"
+cloud_onlyoffice_db_user:       "onlyoffice"
+cloud_onlyoffice_db_password:   "ChangeMeToAStrongPassword123!"   # use ansible-vault
+cloud_onlyoffice_redis_host:    "192.168.1.x"     # IP of ubuntu-database
+cloud_onlyoffice_redis_user:    ""
+cloud_onlyoffice_redis_pass:    "ChangeMeToAStrongPassword123!"   # use ansible-vault
+cloud_onlyoffice_redis_db:      "1"
+cloud_onlyoffice_amqp_uri:      "amqp://admin:ChangeMeToAStrongPassword123!@192.168.1.x:5672/"  # use ansible-vault
+
+# ---------------------------------------------------------------------------
+# Vaultwarden
+# ---------------------------------------------------------------------------
+cloud_vaultwarden_admin_token:  "ChangeMeToAStrongRandomToken123!"  # use ansible-vault

@@ -1,0 +1,36 @@
+---
+- name: Restart systemd-resolved
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: restarted
+  become: true
+
+- name: Restart WireGuard
+  ansible.builtin.systemd:
+    name: wg-quick@wg0.service
+    state: restarted
+  become: true
+
+- name: Restart nginx-proxy-manager container service
+  ansible.builtin.systemd:
+    name: podman-compose-nginx-proxy-manager.service
+    state: restarted
+    scope: user
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+
+- name: Restart adguard-home container service
+  ansible.builtin.systemd:
+    name: podman-compose-adguard-home.service
+    state: restarted
+    scope: user
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+
+- name: Restart ddclient container service
+  ansible.builtin.systemd:
+    name: podman-compose-ddclient.service
+    state: restarted
+    scope: user
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"

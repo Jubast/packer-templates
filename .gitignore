@@ -17,3 +17,8 @@ downloaded_iso_path/
 
 # For built boxes
 *.box
+
+# Ansible — inventory and vault files contain sensitive data
+ansible/inventory/hosts.yml
+ansible/.vault_password
+ansible/**/*.vault.yml

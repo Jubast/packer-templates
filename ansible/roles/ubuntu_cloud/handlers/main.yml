@@ -1,0 +1,16 @@
+---
+- name: Restart nextcloud container service
+  ansible.builtin.systemd:
+    name: podman-compose-nextcloud.service
+    state: restarted
+    scope: user
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+
+- name: Restart vaultwarden container service
+  ansible.builtin.systemd:
+    name: podman-compose-vaultwarden.service
+    state: restarted
+    scope: user
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"

@@ -1,5 +1,0 @@
-DB_MYSQL_HOST=${npm_db_mysql_host}
-DB_MYSQL_PORT=${npm_db_mysql_port}
-DB_MYSQL_USER=${npm_db_mysql_user}
-DB_MYSQL_PASSWORD=${npm_db_mysql_password}
-DB_MYSQL_NAME=${npm_db_mysql_name}

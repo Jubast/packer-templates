@@ -1,0 +1,8 @@
+---
+- name: Configure ubuntu-gateway VM
+  hosts: ubuntu_gateway
+  gather_facts: true
+
+  roles:
+    - common
+    - ubuntu_gateway

@@ -1,0 +1,197 @@
+---
+# ===========================================================================
+# Firewall
+# ===========================================================================
+- name: Allow Nextcloud
+  community.general.ufw:
+    rule: allow
+    port: "8080"
+    proto: tcp
+    comment: "Nextcloud"
+  become: true
+
+- name: Allow Vaultwarden
+  community.general.ufw:
+    rule: allow
+    port: "8081"
+    proto: tcp
+    comment: "Vaultwarden"
+  become: true
+
+- name: Allow Vaultwarden WebSocket
+  community.general.ufw:
+    rule: allow
+    port: "3012"
+    proto: tcp
+    comment: "Vaultwarden WebSocket"
+  become: true
+
+- name: Allow Onlyoffice
+  community.general.ufw:
+    rule: allow
+    port: "8082"
+    proto: tcp
+    comment: "Onlyoffice"
+  become: true
+
+- name: Reload ufw
+  community.general.ufw:
+    state: reloaded
+  become: true
+
+# ===========================================================================
+# Nextcloud
+# ===========================================================================
+- name: Create nextcloud compose directory
+  ansible.builtin.file:
+    path: "{{ compose_base_dir }}/nextcloud"
+    state: directory
+    mode: '0755'
+
+- name: Copy nextcloud docker-compose.yml
+  ansible.builtin.copy:
+    src: nextcloud-docker-compose.yml
+    dest: "{{ compose_base_dir }}/nextcloud/docker-compose.yml"
+    mode: '0644'
+  notify: Restart nextcloud container service
+
+- name: Template nextcloud.env
+  ansible.builtin.template:
+    src: nextcloud.env.j2
+    dest: "{{ compose_base_dir }}/nextcloud/nextcloud.env"
+    mode: '0600'
+  notify: Restart nextcloud container service
+
+- name: Template onlyoffice.env
+  ansible.builtin.template:
+    src: onlyoffice.env.j2
+    dest: "{{ compose_base_dir }}/nextcloud/onlyoffice.env"
+    mode: '0600'
+  notify: Restart nextcloud container service
+
+- name: Copy nextcloud-hooks directory
+  ansible.builtin.copy:
+    src: nextcloud-hooks/
+    dest: "{{ compose_base_dir }}/nextcloud/hooks/"
+    mode: preserve
+
+- name: Find hook scripts
+  ansible.builtin.find:
+    paths: "{{ compose_base_dir }}/nextcloud/hooks"
+    patterns: "*.sh"
+    recurse: true
+  register: _hook_scripts
+
+- name: Ensure hook scripts are executable
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: '0755'
+  loop: "{{ _hook_scripts.files }}"
+
+- name: Deploy nextcloud systemd service
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: deploy_service
+  vars:
+    service_name: nextcloud
+
+# ===========================================================================
+# Vaultwarden
+# ===========================================================================
+- name: Create vaultwarden compose directory
+  ansible.builtin.file:
+    path: "{{ compose_base_dir }}/vaultwarden"
+    state: directory
+    mode: '0755'
+
+- name: Copy vaultwarden docker-compose.yml
+  ansible.builtin.copy:
+    src: vaultwarden-docker-compose.yml
+    dest: "{{ compose_base_dir }}/vaultwarden/docker-compose.yml"
+    mode: '0644'
+  notify: Restart vaultwarden container service
+
+- name: Template vaultwarden.env
+  ansible.builtin.template:
+    src: vaultwarden.env.j2
+    dest: "{{ compose_base_dir }}/vaultwarden/vaultwarden.env"
+    mode: '0600'
+  notify: Restart vaultwarden container service
+
+- name: Deploy vaultwarden systemd service
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: deploy_service
+  vars:
+    service_name: vaultwarden
+
+# ===========================================================================
+# Nextcloud cron timer
+# ===========================================================================
+- name: Copy Nextcloud cron service unit
+  ansible.builtin.copy:
+    src: nextcloud-cron.service
+    dest: "{{ user_systemd_dir }}/nextcloud-cron.service"
+    mode: '0644'
+
+- name: Copy Nextcloud cron timer unit
+  ansible.builtin.copy:
+    src: nextcloud-cron.timer
+    dest: "{{ user_systemd_dir }}/nextcloud-cron.timer"
+    mode: '0644'
+
+- name: Enable and start Nextcloud cron timer
+  ansible.builtin.systemd:
+    name: nextcloud-cron.timer
+    enabled: true
+    state: started
+    scope: user
+    daemon_reload: true
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+
+# ===========================================================================
+# Nextcloud background jobs
+# ===========================================================================
+- name: Wait for Nextcloud to finish installation
+  ansible.builtin.command:
+    cmd: podman exec --user www-data nextcloud_nextcloud_1 php /var/www/html/occ status --output=json
+  register: _nc_status
+  retries: 48
+  delay: 5
+  until: _nc_status.rc == 0 and '"installed":true' in (_nc_status.stdout | default(''))
+  failed_when: false
+  changed_when: false
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+
+- name: Wait for post-installation hooks to complete (OnlyOffice app)
+  ansible.builtin.command:
+    cmd: podman exec --user www-data nextcloud_nextcloud_1 php /var/www/html/occ app:list --output=json
+  register: _nc_apps
+  retries: 48
+  delay: 5
+  until: _nc_apps.rc == 0 and '"onlyoffice"' in (_nc_apps.stdout | default(''))
+  failed_when: false
+  changed_when: false
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+  when: _nc_status.rc is defined and _nc_status.rc == 0
+
+- name: Configure Nextcloud background jobs to use system cron
+  ansible.builtin.command:
+    cmd: podman exec --user www-data nextcloud_nextcloud_1 php /var/www/html/occ background:cron
+  changed_when: true
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+  when:
+    - _nc_status.rc is defined and _nc_status.rc == 0
+    - _nc_apps.rc is defined and _nc_apps.rc == 0
+
+# ===========================================================================
+# Healthcheck watcher
+# ===========================================================================
+- name: Setup container healthcheck watcher
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: setup_healthcheck

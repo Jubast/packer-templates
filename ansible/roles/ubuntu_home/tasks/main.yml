@@ -1,0 +1,210 @@
+---
+# ===========================================================================
+# Firewall
+# ===========================================================================
+- name: Allow Jellyfin HTTP
+  community.general.ufw:
+    rule: allow
+    port: "8096"
+    proto: tcp
+    comment: "Jellyfin HTTP"
+  become: true
+
+- name: Allow Jellyfin HTTPS
+  community.general.ufw:
+    rule: allow
+    port: "8920"
+    proto: tcp
+    comment: "Jellyfin HTTPS"
+  become: true
+
+- name: Allow Jellyfin local discovery
+  community.general.ufw:
+    rule: allow
+    port: "7359"
+    proto: udp
+    comment: "Jellyfin local discovery"
+  become: true
+
+- name: Allow Jellyfin DLNA
+  community.general.ufw:
+    rule: allow
+    port: "1900"
+    proto: udp
+    comment: "Jellyfin DLNA"
+  become: true
+
+- name: Allow Sonarr
+  community.general.ufw:
+    rule: allow
+    port: "8989"
+    proto: tcp
+    comment: "Sonarr"
+  become: true
+
+- name: Allow Radarr
+  community.general.ufw:
+    rule: allow
+    port: "7878"
+    proto: tcp
+    comment: "Radarr"
+  become: true
+
+- name: Allow Prowlarr
+  community.general.ufw:
+    rule: allow
+    port: "9696"
+    proto: tcp
+    comment: "Prowlarr"
+  become: true
+
+- name: Allow Bazarr
+  community.general.ufw:
+    rule: allow
+    port: "6767"
+    proto: tcp
+    comment: "Bazarr"
+  become: true
+
+- name: Allow Jellyseerr
+  community.general.ufw:
+    rule: allow
+    port: "5055"
+    proto: tcp
+    comment: "Jellyseerr"
+  become: true
+
+- name: Allow qBittorrent web UI
+  community.general.ufw:
+    rule: allow
+    port: "8080"
+    proto: tcp
+    comment: "qBittorrent web UI"
+  become: true
+
+- name: Allow qBittorrent BitTorrent TCP
+  community.general.ufw:
+    rule: allow
+    port: "33948"
+    proto: tcp
+    comment: "qBittorrent BitTorrent TCP"
+  become: true
+
+- name: Allow qBittorrent BitTorrent UDP
+  community.general.ufw:
+    rule: allow
+    port: "33948"
+    proto: udp
+    comment: "qBittorrent BitTorrent UDP"
+  become: true
+
+- name: Reload ufw
+  community.general.ufw:
+    state: reloaded
+  become: true
+
+# ===========================================================================
+# Media directories
+# ===========================================================================
+- name: Create media and download directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - /srv/media
+    - /srv/media/home
+    - /srv/media/movies
+    - /srv/media/anime
+    - /srv/media/tv
+    - /srv/media/music
+    - /srv/downloads
+  become: true
+
+- name: Set ownership of media and download directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ container_user }}"
+    group: "{{ container_user }}"
+    state: directory
+  loop:
+    - /srv/media
+    - /srv/downloads
+  become: true
+
+# ===========================================================================
+# Jellyfin
+# ===========================================================================
+- name: Create jellyfin compose directory
+  ansible.builtin.file:
+    path: "{{ compose_base_dir }}/jellyfin"
+    state: directory
+    mode: '0755'
+
+- name: Copy jellyfin docker-compose.yml
+  ansible.builtin.copy:
+    src: jellyfin-docker-compose.yml
+    dest: "{{ compose_base_dir }}/jellyfin/docker-compose.yml"
+    mode: '0644'
+  notify: Restart jellyfin container service
+
+- name: Deploy jellyfin systemd service
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: deploy_service
+  vars:
+    service_name: jellyfin
+
+# ===========================================================================
+# Arr suite (Sonarr, Radarr, Prowlarr, Bazarr, Jellyseerr)
+# ===========================================================================
+- name: Create arr compose directory
+  ansible.builtin.file:
+    path: "{{ compose_base_dir }}/arr"
+    state: directory
+    mode: '0755'
+
+- name: Copy arr docker-compose.yml
+  ansible.builtin.copy:
+    src: arr-docker-compose.yml
+    dest: "{{ compose_base_dir }}/arr/docker-compose.yml"
+    mode: '0644'
+  notify: Restart arr container service
+
+- name: Deploy arr systemd service
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: deploy_service
+  vars:
+    service_name: arr
+
+# ===========================================================================
+# qBittorrent
+# ===========================================================================
+- name: Create qbittorrent compose directory
+  ansible.builtin.file:
+    path: "{{ compose_base_dir }}/qbittorrent"
+    state: directory
+    mode: '0755'
+
+- name: Copy qbittorrent docker-compose.yml
+  ansible.builtin.copy:
+    src: qbittorrent-docker-compose.yml
+    dest: "{{ compose_base_dir }}/qbittorrent/docker-compose.yml"
+    mode: '0644'
+  notify: Restart qbittorrent container service
+
+- name: Deploy qbittorrent systemd service
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: deploy_service
+  vars:
+    service_name: qbittorrent
+
+# ===========================================================================
+# Healthcheck watcher
+# ===========================================================================
+- name: Setup container healthcheck watcher
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: setup_healthcheck

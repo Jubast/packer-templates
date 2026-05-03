@@ -85,32 +85,3 @@ variable "user_ssh_authorized_keys" {
   type = string
   description = "The SSH authorized keys for the user."
 }
-
-// DATABASE
-variable "database_mariadb_root_password" {
-  type = string
-  description = "The root password for the MariaDB database."
-}
-
-variable "database_redis_nextcloud_password" {
-  type = string
-  description = "The password for the Redis nextcloud user."
-  sensitive = true
-}
-
-variable "database_redis_onlyoffice_password" {
-  type = string
-  description = "The password for the Redis onlyoffice user."
-  sensitive = true
-}
-
-variable "database_rabbitmq_default_user" {
-  type = string
-  description = "The default username for the RabbitMQ broker."
-}
-
-variable "database_rabbitmq_default_password" {
-  type = string
-  description = "The default password for the RabbitMQ broker."
-  sensitive = true
-}

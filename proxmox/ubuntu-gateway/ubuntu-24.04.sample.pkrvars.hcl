@@ -28,31 +28,3 @@ user_username               = "myUser"
 user_password_encrypted     = "$6$rounds=4096$4dXBB/1clk96jqRj$2kQWrFitmdolntPRiFx5hN8JCAckGiQd.BjLbaFPn2YwZ3f9UIYAXy8iWb7LKwx.aQjVbwuhIOVzWiQ2RijSN."
 user_ssh_authorized_keys    = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILHLW9aa+K37B5YLqONk9ayKEC5OwjtqG78AwT6YKezR your_email@example.com"
 
-# NGINX PROXY MANAGER DATABASE
-npm_db_mysql_host                           = "192.168.1.254"
-npm_db_mysql_port                           = 3306
-npm_db_mysql_user                           = "npm"
-npm_db_mysql_password                       = "mySecureNpmDbPassword"
-npm_db_mysql_name                           = "npm"
-
-# DDCLIENT
-ddclient_cloudflare_zone      = "example.com"
-ddclient_cloudflare_api_token = "your_cloudflare_api_token_here"
-ddclient_hostname             = "subdomain.example.com"
-
-# WIREGUARD
-wireguard_server_network_interface          = "eth0"
-wireguard_server_address_ipv4               = "10.10.0.1"
-wireguard_server_subnet_address_ipv4        = "10.10.0.0"
-wireguard_server_listen_port                = 51820
-wireguard_server_private_key                = "base64_encoded_private_key_goes_here"
-wireguard_server_public_key                 = "base64_encoded_public_key_goes_here"
-wireguard_peers                             = [
-    {
-        name              = "client-1"
-        private_key       = "base64_encoded_private_key_goes_here"
-        public_key        = "base64_encoded_public_key_goes_here"
-        preshared_key     = "base64_encoded_preshared_key_goes_here"
-        address_ipv4      = "10.10.0.2"
-    }
-]

@@ -1,0 +1,14 @@
+[Unit]
+Description=Podman Compose {{ service_name }}
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory={{ compose_base_dir }}/{{ service_name }}
+ExecStart=/usr/bin/podman-compose -f {{ compose_base_dir }}/{{ service_name }}/docker-compose.yml up -d
+ExecStop=/usr/bin/podman-compose -f {{ compose_base_dir }}/{{ service_name }}/docker-compose.yml down
+TimeoutStartSec=300
+
+[Install]
+WantedBy=default.target

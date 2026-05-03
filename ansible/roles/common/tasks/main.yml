@@ -1,0 +1,90 @@
+---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+  become: true
+
+- name: Install base packages
+  ansible.builtin.apt:
+    name:
+      - unattended-upgrades
+      - qemu-guest-agent
+      - podman
+      - podman-compose
+    state: present
+  become: true
+
+- name: Enable and start base services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+    daemon_reload: true
+  become: true
+  loop:
+    - unattended-upgrades
+    - qemu-guest-agent
+    - fstrim.timer
+
+- name: Allow SSH through firewall
+  community.general.ufw:
+    rule: allow
+    port: "22"
+    proto: tcp
+    comment: "SSH"
+  become: true
+
+- name: Enable ufw
+  community.general.ufw:
+    state: enabled
+  become: true
+
+- name: Disable Docker emulation warning
+  ansible.builtin.file:
+    path: /etc/containers/nodocker
+    state: touch
+    owner: root
+    group: root
+    mode: '0644'
+    modification_time: preserve
+    access_time: preserve
+  become: true
+
+- name: Get container user UID
+  ansible.builtin.command: id -u {{ container_user }}
+  register: _uid_result
+  changed_when: false
+
+- name: Set container user UID fact
+  ansible.builtin.set_fact:
+    container_user_uid: "{{ _uid_result.stdout | trim }}"
+
+- name: Check if user lingering is already enabled
+  ansible.builtin.stat:
+    path: "/var/lib/systemd/linger/{{ container_user }}"
+  register: _linger_stat
+  become: true
+
+- name: Enable user lingering for {{ container_user }}
+  ansible.builtin.command: loginctl enable-linger {{ container_user }}
+  when: not _linger_stat.stat.exists
+  become: true
+
+- name: Create user systemd directory
+  ansible.builtin.file:
+    path: "{{ user_systemd_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Create user local bin directory
+  ansible.builtin.file:
+    path: "{{ user_bin_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Create containers base directory
+  ansible.builtin.file:
+    path: "{{ compose_base_dir }}"
+    state: directory
+    mode: '0755'

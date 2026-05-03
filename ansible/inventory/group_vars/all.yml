@@ -1,0 +1,3 @@
+---
+# Variables shared across all VM groups.
+# Extend this file for any cross-VM settings.

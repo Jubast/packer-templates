@@ -1,0 +1,30 @@
+---
+# Deploy a single podman-compose service as a systemd user service.
+#
+# Required caller variables:
+#   service_name  — name of the service (e.g. "nextcloud")
+#
+# Assumes the caller has already placed docker-compose.yml (and any env/conf
+# files) in {{ compose_base_dir }}/{{ service_name }}/ before including this.
+
+- name: "{{ service_name }} | Create compose directory"
+  ansible.builtin.file:
+    path: "{{ compose_base_dir }}/{{ service_name }}"
+    state: directory
+    mode: '0755'
+
+- name: "{{ service_name }} | Deploy systemd user service unit"
+  ansible.builtin.template:
+    src: podman-compose.service.j2
+    dest: "{{ user_systemd_dir }}/podman-compose-{{ service_name }}.service"
+    mode: '0644'
+
+- name: "{{ service_name }} | Enable and start user service"
+  ansible.builtin.systemd:
+    name: "podman-compose-{{ service_name }}.service"
+    enabled: true
+    state: started
+    scope: user
+    daemon_reload: true
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"

@@ -1,0 +1,138 @@
+---
+# ===========================================================================
+# Firewall
+# ===========================================================================
+- name: Allow MariaDB
+  community.general.ufw:
+    rule: allow
+    port: "3306"
+    proto: tcp
+    comment: "MariaDB"
+  become: true
+
+- name: Allow Redis
+  community.general.ufw:
+    rule: allow
+    port: "6379"
+    proto: tcp
+    comment: "Redis"
+  become: true
+
+- name: Allow RabbitMQ AMQP
+  community.general.ufw:
+    rule: allow
+    port: "5672"
+    proto: tcp
+    comment: "RabbitMQ"
+  become: true
+
+- name: Allow RabbitMQ Management UI
+  community.general.ufw:
+    rule: allow
+    port: "15672"
+    proto: tcp
+    comment: "RabbitMQ Management UI"
+  become: true
+
+- name: Reload ufw
+  community.general.ufw:
+    state: reloaded
+  become: true
+
+# ===========================================================================
+# MariaDB
+# ===========================================================================
+- name: Create mariadb compose directory
+  ansible.builtin.file:
+    path: "{{ compose_base_dir }}/mariadb"
+    state: directory
+    mode: '0755'
+
+- name: Copy mariadb docker-compose.yml
+  ansible.builtin.copy:
+    src: mariadb-docker-compose.yml
+    dest: "{{ compose_base_dir }}/mariadb/docker-compose.yml"
+    mode: '0644'
+  notify: Restart mariadb container service
+
+- name: Template mariadb .env
+  ansible.builtin.template:
+    src: mariadb.env.j2
+    dest: "{{ compose_base_dir }}/mariadb/.env"
+    mode: '0600'
+  notify: Restart mariadb container service
+
+- name: Deploy mariadb systemd service
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: deploy_service
+  vars:
+    service_name: mariadb
+
+# ===========================================================================
+# Redis
+# ===========================================================================
+- name: Create redis compose directory
+  ansible.builtin.file:
+    path: "{{ compose_base_dir }}/redis"
+    state: directory
+    mode: '0755'
+
+- name: Copy redis docker-compose.yml
+  ansible.builtin.copy:
+    src: redis-docker-compose.yml
+    dest: "{{ compose_base_dir }}/redis/docker-compose.yml"
+    mode: '0644'
+  notify: Restart redis container service
+
+- name: Template redis.conf
+  ansible.builtin.template:
+    src: redis.conf.j2
+    dest: "{{ compose_base_dir }}/redis/redis.conf"
+    mode: '0644'
+  notify: Restart redis container service
+
+- name: Deploy redis systemd service
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: deploy_service
+  vars:
+    service_name: redis
+
+# ===========================================================================
+# RabbitMQ
+# ===========================================================================
+- name: Create rabbitmq compose directory
+  ansible.builtin.file:
+    path: "{{ compose_base_dir }}/rabbitmq"
+    state: directory
+    mode: '0755'
+
+- name: Copy rabbitmq docker-compose.yml
+  ansible.builtin.copy:
+    src: rabbitmq-docker-compose.yml
+    dest: "{{ compose_base_dir }}/rabbitmq/docker-compose.yml"
+    mode: '0644'
+  notify: Restart rabbitmq container service
+
+- name: Template rabbitmq .env
+  ansible.builtin.template:
+    src: rabbitmq.env.j2
+    dest: "{{ compose_base_dir }}/rabbitmq/.env"
+    mode: '0600'
+  notify: Restart rabbitmq container service
+
+- name: Deploy rabbitmq systemd service
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: deploy_service
+  vars:
+    service_name: rabbitmq
+
+# ===========================================================================
+# Healthcheck watcher
+# ===========================================================================
+- name: Setup container healthcheck watcher
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: setup_healthcheck

@@ -1,0 +1,8 @@
+---
+- name: Configure ubuntu-cloud VM
+  hosts: ubuntu_cloud
+  gather_facts: true
+
+  roles:
+    - common
+    - ubuntu_cloud

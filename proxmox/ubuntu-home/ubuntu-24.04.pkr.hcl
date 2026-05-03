@@ -4,6 +4,10 @@ packer {
       source  = "github.com/hashicorp/proxmox"
       version = "~> 1.2"
     }
+    ansible = {
+      source  = "github.com/hashicorp/ansible"
+      version = "~> 1.1"
+    }
   }
 }
 
@@ -98,67 +102,21 @@ source "proxmox-iso" "ubuntu-home" {
 build {
     sources = [ "sources.proxmox-iso.ubuntu-home" ]
 
-    # wait for cloud-init to successfully finish
+    # Wait for cloud-init to finish before Ansible connects.
     provisioner "shell" {
       inline = [
         "cloud-init status --wait > /dev/null 2>&1"
       ]
     }
 
-    provisioner "shell" {
-      environment_vars = ["FOR_USER=${var.user_username}"]
-      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/configure-system.sh"
-    }
-
-    provisioner "shell" {
-      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/install-container-tools.sh"
-    }
-
-    provisioner "shell" {
-      environment_vars = ["FOR_USER=${var.user_username}"]
-      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/enable-user-lingering.sh"
-    }
-
-    provisioner "shell" {
-      inline = ["mkdir -p /tmp/docker"]
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/jellyfin-docker-compose.yml"
-      source      = "${path.root}/assets/docker/jellyfin-docker-compose.yml"
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/jellyfin.env"
-      source      = "${path.root}/assets/docker/jellyfin.env"
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/arr-docker-compose.yml"
-      source      = "${path.root}/assets/docker/arr-docker-compose.yml"
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/arr.env"
-      source      = "${path.root}/assets/docker/arr.env"
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/qbittorrent-docker-compose.yml"
-      source      = "${path.root}/assets/docker/qbittorrent-docker-compose.yml"
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/qbittorrent.env"
-      source      = "${path.root}/assets/docker/qbittorrent.env"
-    }
-
-    provisioner "shell" {
-      execute_command = "sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/configure-container-services.sh"
+    # Run the Ansible playbook — same playbook used for ongoing maintenance.
+    provisioner "ansible" {
+      playbook_file = "${path.root}/../../ansible/playbooks/configure-home.yml"
+      user          = var.user_username
+      extra_arguments = [
+        "--extra-vars", "@${path.root}/../../ansible/group_vars/ubuntu_home/main.yml",
+        "--extra-vars", "container_user=${var.user_username}"
+      ]
     }
 
     # Remove NOPASSWD sudo privilege as final step

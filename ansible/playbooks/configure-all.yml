@@ -1,0 +1,28 @@
+---
+- name: Configure ubuntu-database VM
+  hosts: ubuntu_database
+  gather_facts: true
+  roles:
+    - common
+    - ubuntu_database
+
+- name: Configure ubuntu-gateway VM
+  hosts: ubuntu_gateway
+  gather_facts: true
+  roles:
+    - common
+    - ubuntu_gateway
+
+- name: Configure ubuntu-cloud VM
+  hosts: ubuntu_cloud
+  gather_facts: true
+  roles:
+    - common
+    - ubuntu_cloud
+
+- name: Configure ubuntu-home VM
+  hosts: ubuntu_home
+  gather_facts: true
+  roles:
+    - common
+    - ubuntu_home

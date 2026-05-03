@@ -4,6 +4,10 @@ packer {
       source  = "github.com/hashicorp/proxmox"
       version = "~> 1.2"
     }
+    ansible = {
+      source  = "github.com/hashicorp/ansible"
+      version = "~> 1.1"
+    }
   }
 }
 
@@ -61,7 +65,7 @@ source "proxmox-iso" "ubuntu-database" {
     cpu_type                 = "x86-64-v2-AES"
 
     # VM Memory Settings
-    memory                   = 2048
+    memory                   = 1024
 
     # VM Network Settings
     network_adapters {
@@ -98,74 +102,21 @@ source "proxmox-iso" "ubuntu-database" {
 build {
     sources = [ "sources.proxmox-iso.ubuntu-database" ]
 
-    # wait for cloud-init to successfully finish
+    # Wait for cloud-init to finish before Ansible connects.
     provisioner "shell" {
       inline = [
         "cloud-init status --wait > /dev/null 2>&1"
       ]
     }
 
-    provisioner "shell" {      
-      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/configure-system.sh"
-    }
-
-    provisioner "shell" {      
-      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/install-container-tools.sh"
-    }
-
-    provisioner "shell" {
-      environment_vars = ["FOR_USER=${var.user_username}"]
-      execute_command = "sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/enable-user-lingering.sh"
-    }
-
-    provisioner "shell" {
-      inline = ["mkdir -p /tmp/docker"]
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/mariadb-docker-compose.yml"
-      source      = "${path.root}/assets/docker/mariadb-docker-compose.yml"
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/mariadb.env"
-      content     = templatefile("${path.root}/assets/docker/mariadb.env.pkrtpl.hcl", {
-        database_mariadb_root_password = var.database_mariadb_root_password
-      })
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/redis-docker-compose.yml"
-      source      = "${path.root}/assets/docker/redis-docker-compose.yml"
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/redis.conf"
-      content     = templatefile("${path.root}/assets/docker/redis.conf.pkrtpl.hcl", {
-        database_redis_nextcloud_password  = var.database_redis_nextcloud_password
-        database_redis_onlyoffice_password = var.database_redis_onlyoffice_password
-      })
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/rabbitmq-docker-compose.yml"
-      source      = "${path.root}/assets/docker/rabbitmq-docker-compose.yml"
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/rabbitmq.env"
-      content     = templatefile("${path.root}/assets/docker/rabbitmq.env.pkrtpl.hcl", {
-        database_rabbitmq_default_user     = var.database_rabbitmq_default_user
-        database_rabbitmq_default_password = var.database_rabbitmq_default_password
-      })
-    }
-
-    provisioner "shell" {
-      execute_command = "sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/configure-container-services.sh"
+    # Run the Ansible playbook — same playbook used for ongoing maintenance.
+    provisioner "ansible" {
+      playbook_file = "${path.root}/../../ansible/playbooks/configure-database.yml"
+      user          = var.user_username
+      extra_arguments = [
+        "--extra-vars", "@${path.root}/../../ansible/group_vars/ubuntu_database/main.yml",
+        "--extra-vars", "container_user=${var.user_username}"
+      ]
     }
 
     # Remove NOPASSWD sudo privilege as final step

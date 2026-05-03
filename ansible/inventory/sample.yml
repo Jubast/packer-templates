@@ -1,0 +1,44 @@
+---
+# Sample inventory — copy this to hosts.yml and adjust IPs and usernames.
+# Each VM group maps to a role and a set of group_vars.
+#
+# The ansible_user must be the same user that was configured during VM
+# creation (user_username in the Packer variable file).
+#
+# For standalone runs that require sudo, pass --ask-become-pass or configure
+# passwordless sudo for the system tasks in the role.
+
+all:
+  children:
+
+    ubuntu_cloud:
+      hosts:
+        cloud:
+          ansible_host: 192.168.1.x     # replace with actual IP
+      vars:
+        ansible_user: cloud             # must match user_username from Packer vars
+        ansible_ssh_private_key_file: ~/.ssh/id_ed25519
+
+    ubuntu_database:
+      hosts:
+        database:
+          ansible_host: 192.168.1.x
+      vars:
+        ansible_user: database
+        ansible_ssh_private_key_file: ~/.ssh/id_ed25519
+
+    ubuntu_gateway:
+      hosts:
+        gateway:
+          ansible_host: 192.168.1.x
+      vars:
+        ansible_user: gateway
+        ansible_ssh_private_key_file: ~/.ssh/id_ed25519
+
+    ubuntu_home:
+      hosts:
+        home:
+          ansible_host: 192.168.1.x
+      vars:
+        ansible_user: home
+        ansible_ssh_private_key_file: ~/.ssh/id_ed25519

@@ -1,0 +1,25 @@
+##
+## General
+##
+daemon=300              # check every 300 seconds
+syslog=yes              # log update msgs to syslog
+pid=/var/run/ddclient/ddclient.pid
+ssl=yes
+
+##
+## IP scrape webpage
+##
+use=web
+web='https://cloudflare.com/cdn-cgi/trace'
+web-skip='ip='
+verbose=yes
+
+##
+## CloudFlare (www.cloudflare.com)
+##
+protocol=cloudflare,        \
+zone={{ ddclient_cloudflare_zone }},            \
+ttl=1,                      \
+login=token,                \
+password={{ ddclient_cloudflare_api_token }}
+{{ ddclient_hostname }}

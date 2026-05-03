@@ -1,0 +1,5 @@
+---
+# Fallback values — overridden by group_vars in normal use.
+compose_base_dir: "/home/{{ container_user }}/.local/share/containers"
+user_systemd_dir: "/home/{{ container_user }}/.config/systemd/user"
+user_bin_dir:     "/home/{{ container_user }}/.local/bin"

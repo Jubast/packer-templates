@@ -4,6 +4,10 @@ packer {
       source  = "github.com/hashicorp/proxmox"
       version = "~> 1.2"
     }
+    ansible = {
+      source  = "github.com/hashicorp/ansible"
+      version = "~> 1.1"
+    }
   }
 }
 
@@ -98,91 +102,22 @@ source "proxmox-iso" "ubuntu-cloud" {
 build {
     sources = [ "sources.proxmox-iso.ubuntu-cloud" ]
 
-    # wait for cloud-init to successfully finish
+    # Wait for cloud-init to finish before Ansible connects.
     provisioner "shell" {
-      inline = [
-        "cloud-init status --wait > /dev/null 2>&1"
+      inline = ["cloud-init status --wait > /dev/null 2>&1"]
+    }
+
+    # Run the Ansible playbook — same playbook used for ongoing maintenance.
+    provisioner "ansible" {
+      playbook_file = "${path.root}/../../ansible/playbooks/configure-cloud.yml"
+      user          = var.user_username
+      extra_arguments = [
+        "--extra-vars", "@${path.root}/../../ansible/group_vars/ubuntu_cloud/main.yml",
+        "--extra-vars", "container_user=${var.user_username}"
       ]
     }
 
-    provisioner "shell" {
-      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/configure-system.sh"
-    }
-
-    provisioner "shell" {
-      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/install-container-tools.sh"
-    }
-
-    provisioner "shell" {
-      environment_vars = ["FOR_USER=${var.user_username}"]
-      execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/enable-user-lingering.sh"
-    }
-
-    provisioner "shell" {
-      inline = ["mkdir -p /tmp/docker"]
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/nextcloud-hooks"
-      source      = "${path.root}/assets/docker/nextcloud-hooks"
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/nextcloud-docker-compose.yml"
-      source      = "${path.root}/assets/docker/nextcloud-docker-compose.yml"
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/nextcloud.env"
-      content     = templatefile("${path.root}/assets/docker/nextcloud.env.pkrtpl.hcl", {
-        cloud_nextcloud_db_host         = var.cloud_nextcloud_db_host
-        cloud_nextcloud_db_name         = var.cloud_nextcloud_db_name
-        cloud_nextcloud_db_user         = var.cloud_nextcloud_db_user
-        cloud_nextcloud_db_password     = var.cloud_nextcloud_db_password
-        cloud_nextcloud_redis_password  = var.cloud_nextcloud_redis_password
-        cloud_nextcloud_admin_password  = var.cloud_nextcloud_admin_password
-        cloud_nextcloud_trusted_proxies        = var.cloud_nextcloud_trusted_proxies
-        cloud_nextcloud_trusted_domains        = var.cloud_nextcloud_trusted_domains
-      })
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/onlyoffice.env"
-      content     = templatefile("${path.root}/assets/docker/onlyoffice.env.pkrtpl.hcl", {
-        cloud_onlyoffice_jwt_secret  = var.cloud_onlyoffice_jwt_secret
-        cloud_onlyoffice_db_host     = var.cloud_onlyoffice_db_host
-        cloud_onlyoffice_db_name     = var.cloud_onlyoffice_db_name
-        cloud_onlyoffice_db_user     = var.cloud_onlyoffice_db_user
-        cloud_onlyoffice_db_password = var.cloud_onlyoffice_db_password
-        cloud_onlyoffice_redis_host  = var.cloud_onlyoffice_redis_host
-        cloud_onlyoffice_redis_user  = var.cloud_onlyoffice_redis_user
-        cloud_onlyoffice_redis_pass  = var.cloud_onlyoffice_redis_pass
-        cloud_onlyoffice_redis_db    = var.cloud_onlyoffice_redis_db
-        cloud_onlyoffice_amqp_uri    = var.cloud_onlyoffice_amqp_uri
-      })
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/vaultwarden-docker-compose.yml"
-      source      = "${path.root}/assets/docker/vaultwarden-docker-compose.yml"
-    }
-
-    provisioner "file" {
-      destination = "/tmp/docker/vaultwarden.env"
-      content     = templatefile("${path.root}/assets/docker/vaultwarden.env.pkrtpl.hcl", {
-        cloud_vaultwarden_admin_token = var.cloud_vaultwarden_admin_token
-      })
-    }
-
-    provisioner "shell" {
-      execute_command = "sh -c '{{ .Vars }} {{ .Path }}'"
-      script          = "${path.root}/scripts/configure-container-services.sh"
-    }
-
-    # Remove NOPASSWD sudo privilege as final step
+    # Remove NOPASSWD sudo privilege as final step.
     provisioner "shell" {
       execute_command = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
       inline = [
