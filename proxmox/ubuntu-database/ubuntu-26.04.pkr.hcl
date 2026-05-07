@@ -65,7 +65,7 @@ source "proxmox-iso" "ubuntu-database" {
     cpu_type                 = "x86-64-v2-AES"
 
     # VM Memory Settings
-    memory                   = 1024
+    memory                   = 2048
 
     # VM Network Settings
     network_adapters {

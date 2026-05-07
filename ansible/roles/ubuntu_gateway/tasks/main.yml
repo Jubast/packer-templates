@@ -9,6 +9,7 @@
     sysctl_set: true
     state: present
     reload: true
+    sysctl_file: /etc/sysctl.d/99-podman.conf
   become: true
 
 - name: Allow unprivileged ports from 53 (covers DNS, HTTP, HTTPS)
@@ -18,6 +19,7 @@
     sysctl_set: true
     state: present
     reload: true
+    sysctl_file: /etc/sysctl.d/99-podman.conf
   become: true
 
 - name: Configure systemd-resolved to use AdGuard Home as upstream DNS
