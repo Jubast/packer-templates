@@ -20,11 +20,11 @@
     dest: "{{ common_user_systemd_dir }}/container-healthcheck.timer"
     mode: '0644'
 
-- name: Enable and start container healthcheck timer
+- name: Enable container healthcheck timer
   ansible.builtin.systemd:
     name: container-healthcheck.timer
-    enabled: true
-    state: started
+    enabled: "{{ start_services }}"
+    state: "{{ 'started' if start_services else omit }}"
     scope: user
     daemon_reload: true
   environment:

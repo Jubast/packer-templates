@@ -140,11 +140,11 @@
     dest: "{{ common_user_systemd_dir }}/nextcloud-cron.timer"
     mode: '0644'
 
-- name: Enable and start Nextcloud cron timer
+- name: Enable Nextcloud cron timer
   ansible.builtin.systemd:
     name: nextcloud-cron.timer
-    enabled: true
-    state: started
+    enabled: "{{ start_services }}"
+    state: "{{ 'started' if start_services else omit }}"
     scope: user
     daemon_reload: true
   environment:
@@ -164,6 +164,7 @@
   changed_when: false
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+  when: start_services
 
 - name: Wait for post-installation hooks to complete (OnlyOffice app)
   ansible.builtin.command:
@@ -176,7 +177,7 @@
   changed_when: false
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
-  when: _nc_status.rc is defined and _nc_status.rc == 0
+  when: start_services and _nc_status.rc is defined and _nc_status.rc == 0
 
 - name: Configure Nextcloud background jobs to use system cron
   ansible.builtin.command:
@@ -185,6 +186,7 @@
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
   when:
+    - start_services
     - _nc_status.rc is defined and _nc_status.rc == 0
     - _nc_apps.rc is defined and _nc_apps.rc == 0
 

@@ -65,7 +65,7 @@ source "proxmox-iso" "ubuntu-gateway" {
     cpu_type                 = "x86-64-v2-AES"
 
     # VM Memory Settings
-    memory                   = 1024
+    memory                   = 2048
 
     # VM Network Settings
     network_adapters {
@@ -113,9 +113,12 @@ build {
     provisioner "ansible" {
       playbook_file = "${path.root}/../../ansible/playbooks/configure-gateway.yml"
       user          = var.user_username
+      ansible_env_vars = [
+        "ANSIBLE_CONFIG=${path.root}/../../ansible.cfg"
+      ]
       extra_arguments = [
-        "--extra-vars", "@${path.root}/../../ansible/group_vars/ubuntu_gateway/main.yml",
-        "--extra-vars", "container_user=${var.user_username}"
+        "--extra-vars", "@${path.root}/../../ansible/inventory/group_vars/ubuntu_gateway/main.yml",
+        "--extra-vars", "container_user=${var.user_username} target_hosts=all"
       ]
     }
 

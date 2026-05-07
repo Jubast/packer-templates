@@ -1,6 +1,6 @@
 ---
 - name: Configure ubuntu-cloud VM
-  hosts: ubuntu_cloud
+  hosts: "{{ target_hosts | default('ubuntu_cloud') }}"
   gather_facts: true
 
   roles:

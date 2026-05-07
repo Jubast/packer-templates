@@ -3,3 +3,8 @@
 common_compose_base_dir: "/home/{{ container_user }}/.local/share/containers"
 common_user_systemd_dir: "/home/{{ container_user }}/.config/systemd/user"
 common_user_bin_dir: "/home/{{ container_user }}/.local/bin"
+
+# Set to true to start services immediately after enabling them.
+# Leave false when provisioning a new server so you can restore data before
+# starting containers.
+start_services: false

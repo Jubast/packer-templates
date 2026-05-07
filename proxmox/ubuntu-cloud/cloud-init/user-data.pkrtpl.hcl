@@ -74,13 +74,6 @@ autoinstall:
   # after install update the system with security and update packages
   updates: all
 
-  # disable SSH root login and start the ufw firewall automatically
-  debconf-selections: |
-    openssh-server openssh-server/permit-root-login boolean false
-    ufw ufw/allow_known_ports multiselect SSH
-    ufw ufw/enable boolean true
-    debconf debconf/frontend select Noninteractive
-
   # install additional packages
   packages:
     - qemu-guest-agent

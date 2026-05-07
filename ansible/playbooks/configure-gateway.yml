@@ -1,6 +1,6 @@
 ---
 - name: Configure ubuntu-gateway VM
-  hosts: ubuntu_gateway
+  hosts: "{{ target_hosts | default('ubuntu_gateway') }}"
   gather_facts: true
 
   roles:

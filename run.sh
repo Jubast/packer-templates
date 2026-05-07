@@ -49,25 +49,25 @@ case "${COMMAND}" in
     build-cloud)
         echo "==> Using builder: proxmox"
         cd "./proxmox/ubuntu-cloud"
-        packer build -force -var-file="ubuntu-24.04.auto.pkrvars.hcl" .
+        packer build -force -var-file="ubuntu-26.04.auto.pkrvars.hcl" .
         exit 0
         ;;
     build-database)
         echo "==> Using builder: proxmox"
         cd "./proxmox/ubuntu-database"
-        packer build -force -var-file="ubuntu-24.04.auto.pkrvars.hcl" .
+        packer build -force -var-file="ubuntu-26.04.auto.pkrvars.hcl" .
         exit 0
         ;;
     build-gateway)
         echo "==> Using builder: proxmox"
         cd "./proxmox/ubuntu-gateway"
-        packer build -force -var-file="ubuntu-24.04.auto.pkrvars.hcl" .
+        packer build -force -var-file="ubuntu-26.04.auto.pkrvars.hcl" .
         exit 0
         ;;
     build-home)
         echo "==> Using builder: proxmox"
         cd "./proxmox/ubuntu-home"
-        packer build -force -var-file="ubuntu-24.04.auto.pkrvars.hcl" .
+        packer build -force -var-file="ubuntu-26.04.auto.pkrvars.hcl" .
         exit 0
         ;;
 

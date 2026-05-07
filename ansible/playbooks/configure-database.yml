@@ -1,6 +1,6 @@
 ---
 - name: Configure ubuntu-database VM
-  hosts: ubuntu_database
+  hosts: "{{ target_hosts | default('ubuntu_database') }}"
   gather_facts: true
 
   roles:

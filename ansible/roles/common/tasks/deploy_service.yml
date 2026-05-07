@@ -19,11 +19,11 @@
     dest: "{{ common_user_systemd_dir }}/podman-compose-{{ common_service_name }}.service"
     mode: '0644'
 
-- name: "Enable and start user service | {{ common_service_name }}"
+- name: "Enable user service | {{ common_service_name }}"
   ansible.builtin.systemd:
     name: "podman-compose-{{ common_service_name }}.service"
-    enabled: true
-    state: started
+    enabled: "{{ start_services }}"
+    state: "{{ 'started' if start_services else omit }}"
     scope: user
     daemon_reload: true
   environment:

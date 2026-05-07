@@ -1,6 +1,6 @@
 ---
 - name: Configure ubuntu-home VM
-  hosts: ubuntu_home
+  hosts: "{{ target_hosts | default('ubuntu_home') }}"
   gather_facts: true
 
   roles:

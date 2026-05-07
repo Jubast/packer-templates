@@ -6,6 +6,7 @@
     scope: user
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+  when: start_services | default(false)
 
 - name: Restart redis container service
   ansible.builtin.systemd:
@@ -14,6 +15,7 @@
     scope: user
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+  when: start_services | default(false)
 
 - name: Restart rabbitmq container service
   ansible.builtin.systemd:
@@ -22,3 +24,4 @@
     scope: user
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+  when: start_services | default(false)

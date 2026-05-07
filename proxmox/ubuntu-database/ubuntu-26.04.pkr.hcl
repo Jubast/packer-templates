@@ -113,9 +113,12 @@ build {
     provisioner "ansible" {
       playbook_file = "${path.root}/../../ansible/playbooks/configure-database.yml"
       user          = var.user_username
+      ansible_env_vars = [
+        "ANSIBLE_CONFIG=${path.root}/../../ansible.cfg"
+      ]
       extra_arguments = [
-        "--extra-vars", "@${path.root}/../../ansible/group_vars/ubuntu_database/main.yml",
-        "--extra-vars", "container_user=${var.user_username}"
+        "--extra-vars", "@${path.root}/../../ansible/inventory/group_vars/ubuntu_database/main.yml",
+        "--extra-vars", "container_user=${var.user_username} target_hosts=all"
       ]
     }
 
