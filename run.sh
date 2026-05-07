@@ -66,7 +66,7 @@ case "${COMMAND}" in
         ;;
     build-home)
         echo "==> Using builder: proxmox"
-        cd "./proxmox/ubuntu-home"
+        cd "./proxmox/ubuntu-streaming"
         packer build -force -var-file="ubuntu-26.04.auto.pkrvars.hcl" .
         exit 0
         ;;

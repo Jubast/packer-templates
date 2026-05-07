@@ -20,9 +20,9 @@
     - common
     - ubuntu_cloud
 
-- name: Configure ubuntu-home VM
-  hosts: ubuntu_home
+- name: Configure ubuntu-streaming VM
+  hosts: ubuntu_streaming
   gather_facts: true
   roles:
     - common
-    - ubuntu_home
+    - ubuntu_streaming

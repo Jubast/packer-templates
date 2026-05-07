@@ -1,0 +1,8 @@
+---
+- name: Configure ubuntu-streaming VM
+  hosts: "{{ target_hosts | default('ubuntu_streaming') }}"
+  gather_facts: true
+
+  roles:
+    - common
+    - ubuntu_streaming

@@ -25,7 +25,7 @@ autoinstall:
   # configure system
   user-data:
     # configure hostname
-    hostname: ubuntu-home
+    hostname: ubuntu-streaming
     # configure user
     users:
       - name: ${user_username}

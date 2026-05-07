@@ -24,7 +24,7 @@ locals {
   }
 }
 
-source "proxmox-iso" "ubuntu-home" {
+source "proxmox-iso" "ubuntu-streaming" {
     # Proxmox connection settings
     proxmox_url              = var.proxmox_url
     username                 = var.proxmox_username
@@ -100,7 +100,7 @@ source "proxmox-iso" "ubuntu-home" {
 }
 
 build {
-    sources = [ "sources.proxmox-iso.ubuntu-home" ]
+    sources = [ "sources.proxmox-iso.ubuntu-streaming" ]
 
     # Wait for cloud-init to finish before Ansible connects.
     provisioner "shell" {
@@ -111,13 +111,13 @@ build {
 
     # Run the Ansible playbook — same playbook used for ongoing maintenance.
     provisioner "ansible" {
-      playbook_file = "${path.root}/../../ansible/playbooks/configure-home.yml"
+      playbook_file = "${path.root}/../../ansible/playbooks/configure-streaming.yml"
       user          = var.user_username
       ansible_env_vars = [
         "ANSIBLE_CONFIG=${path.root}/../../ansible.cfg"
       ]
       extra_arguments = [
-        "--extra-vars", "@${path.root}/../../ansible/inventory/group_vars/ubuntu_home/main.yml",
+        "--extra-vars", "@${path.root}/../../ansible/inventory/group_vars/ubuntu_streaming/main.yml",
         "--extra-vars", "container_user=${var.user_username} target_hosts=all"
       ]
     }
