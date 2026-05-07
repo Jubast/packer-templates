@@ -12,7 +12,15 @@
       - qemu-guest-agent
       - podman
       - podman-compose
+      - passt
+      - sudo
     state: present
+  become: true
+
+- name: Switch from sudo-rs to legacy sudo
+  community.general.alternatives:
+    name: sudo
+    path: /usr/bin/sudo.ws
   become: true
 
 - name: Enable and start base services
@@ -89,3 +97,15 @@
     path: "{{ common_compose_base_dir }}"
     state: directory
     mode: '0755'
+
+- name: Create user containers config directory
+  ansible.builtin.file:
+    path: "/home/{{ container_user }}/.config/containers"
+    state: directory
+    mode: '0755'
+
+- name: Configure podman to use pasta network driver
+  ansible.builtin.template:
+    src: containers.conf.j2
+    dest: "/home/{{ container_user }}/.config/containers/containers.conf"
+    mode: '0644'

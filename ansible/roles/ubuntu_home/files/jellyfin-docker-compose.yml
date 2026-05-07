@@ -8,6 +8,7 @@ services:
   jellyfin:
     image: docker.io/linuxserver/jellyfin:10.11.6
     restart: unless-stopped
+    network_mode: pasta
     ports:
       - 8096:8096    # HTTP web UI
       - 8920:8920    # HTTPS web UI

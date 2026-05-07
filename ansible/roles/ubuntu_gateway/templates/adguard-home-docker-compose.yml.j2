@@ -8,6 +8,7 @@ services:
   adguard-home:
     image: docker.io/adguard/adguardhome:v0.107.72
     restart: unless-stopped
+    network_mode: pasta
     ports:
       - {{ wireguard_server_address_ipv4 }}:53:53/tcp
       - {{ wireguard_server_address_ipv4 }}:53:53/udp

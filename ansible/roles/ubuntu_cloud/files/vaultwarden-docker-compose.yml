@@ -7,6 +7,7 @@ services:
   vaultwarden:
     image: docker.io/vaultwarden/server:1.35.7-alpine
     restart: unless-stopped
+    network_mode: pasta
     ports:
       - 8081:80    # web UI & API
       - 3012:3012  # WebSocket notifications

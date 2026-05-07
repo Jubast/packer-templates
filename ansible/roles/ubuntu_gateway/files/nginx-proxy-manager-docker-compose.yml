@@ -8,7 +8,7 @@ services:
   nginx-proxy-manager:
     image: docker.io/jc21/nginx-proxy-manager:2.14.0
     restart: unless-stopped
-    network_mode: host
+    network_mode: pasta
     ports:
       - 80:80
       - 443:443

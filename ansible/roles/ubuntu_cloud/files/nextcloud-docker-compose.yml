@@ -21,6 +21,7 @@ services:
   nextcloud:
     image: docker.io/nextcloud:33-apache
     restart: unless-stopped
+    network_mode: pasta
     ports:
       - 8080:80    # web UI
     volumes:
@@ -48,6 +49,7 @@ services:
     # Accessed by Nextcloud via internal Docker network (http://imaginary:9000). Not exposed to the host.
     image: docker.io/nextcloud/aio-imaginary:20260409_094910
     restart: unless-stopped
+    network_mode: pasta
     command: -concurrency 20 -enable-url-source
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:9000/health"]
@@ -64,6 +66,7 @@ services:
   onlyoffice:
     image: docker.io/onlyoffice/documentserver:9.3.1
     restart: unless-stopped
+    network_mode: pasta
     ports:
       - 8082:80    # OnlyOffice Document Server
     volumes:

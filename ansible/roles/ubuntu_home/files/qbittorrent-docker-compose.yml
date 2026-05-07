@@ -7,6 +7,7 @@ services:
   qbittorrent:
     image: docker.io/linuxserver/qbittorrent:5.1.4
     restart: unless-stopped
+    network_mode: pasta
     ports:
       - 8080:8080          # web UI
       - 33948:33948          # BitTorrent TCP

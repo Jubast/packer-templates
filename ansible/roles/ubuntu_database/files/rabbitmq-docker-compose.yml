@@ -7,6 +7,7 @@ services:
   rabbitmq:
     image: docker.io/rabbitmq:4.3.0-management-alpine
     restart: unless-stopped
+    network_mode: pasta
     ports:
       - 5672:5672
       - 15672:15672

@@ -11,7 +11,7 @@
     reload: true
   become: true
 
-- name: Allow unprivileged ports from 53 (for AdGuard Home DNS)
+- name: Allow unprivileged ports from 53 (covers DNS, HTTP, HTTPS)
   ansible.posix.sysctl:
     name: net.ipv4.ip_unprivileged_port_start
     value: '53'
@@ -205,12 +205,6 @@
     dest: "{{ common_compose_base_dir }}/ddclient/docker-compose.yml"
     mode: '0644'
   notify: Restart ddclient container service
-
-- name: Copy ddclient .env
-  ansible.builtin.copy:
-    src: ddclient.env
-    dest: "{{ common_compose_base_dir }}/ddclient/.env"
-    mode: '0600'
 
 - name: Deploy ddclient systemd service
   ansible.builtin.include_role:
