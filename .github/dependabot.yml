@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: "docker-compose"
+    directory: "/ansible/roles/ubuntu_cloud/files"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "docker-compose"
+    directory: "/ansible/roles/ubuntu_database/files"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "docker-compose"
+    directory: "/ansible/roles/ubuntu_gateway/files"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "docker-compose"
+    directory: "/ansible/roles/ubuntu_streaming/files"
+    schedule:
+      interval: "monthly"
