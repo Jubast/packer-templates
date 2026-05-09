@@ -22,4 +22,4 @@ downloaded_iso_path/
 ansible/inventory/hosts.yml
 ansible/.vault_password
 ansible/**/*.vault.yml
-.ansible
+#.ansible
