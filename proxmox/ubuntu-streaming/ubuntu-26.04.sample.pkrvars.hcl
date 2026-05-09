@@ -20,11 +20,11 @@ iso_checksum                = "sha256:dec49008a71f6098d0bcfc822021f4d042d5f2db27
 
 # VM
 os_name                     = "Ubuntu 26.04 LTS (Resolute Raccoon)"
-vm_name                     = "ubuntu26-home"
+vm_name                     = "ubuntu26-streaming"
 vm_id                       = 202
 
 # USER
-user_username               = "home"
+user_username               = "streaming"
 user_password_encrypted     = "$6$rounds=4096$4dXBB/1clk96jqRj$2kQWrFitmdolntPRiFx5hN8JCAckGiQd.BjLbaFPn2YwZ3f9UIYAXy8iWb7LKwx.aQjVbwuhIOVzWiQ2RijSN."
 user_ssh_authorized_keys    = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILHLW9aa+K37B5YLqONk9ayKEC5OwjtqG78AwT6YKezR your_email@example.com"
 

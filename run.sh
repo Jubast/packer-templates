@@ -10,20 +10,20 @@ set -u  # Treat unset variables as errors
 set -o pipefail  # Catch errors in piped commands
 
 if [[ $# -lt 1 ]]; then
-    echo "Usage: $0 {build-cloud|build-database|build-gateway|build-home}"
-    echo "       $0 {configure-cloud|configure-database|configure-gateway|configure-home|configure-all}"
+    echo "Usage: $0 {build-cloud|build-database|build-gateway|build-streaming}"
+    echo "       $0 {configure-cloud|configure-database|configure-gateway|configure-streaming|configure-all}"
     echo ""
     echo "Build commands (Packer — creates a new VM template):"
     echo "  $0 build-cloud      # Build cloud VM with Proxmox"
     echo "  $0 build-database   # Build database VM with Proxmox"
     echo "  $0 build-gateway    # Build gateway VM with Proxmox"
-    echo "  $0 build-home       # Build home VM with Proxmox"
+    echo "  $0 build-streaming  # Build streaming VM with Proxmox"
     echo ""
     echo "Configure commands (Ansible — apply/update config on existing VMs):"
     echo "  $0 configure-cloud      # Configure cloud VM"
     echo "  $0 configure-database   # Configure database VM"
     echo "  $0 configure-gateway    # Configure gateway VM"
-    echo "  $0 configure-home       # Configure home VM"
+    echo "  $0 configure-streaming  # Configure streaming VM"
     echo "  $0 configure-all        # Configure all VMs"
     echo ""
     echo "Ansible options are passed through, e.g.:"
@@ -64,7 +64,7 @@ case "${COMMAND}" in
         packer build -force -var-file="ubuntu-26.04.auto.pkrvars.hcl" .
         exit 0
         ;;
-    build-home)
+    build-streaming)
         echo "==> Using builder: proxmox"
         cd "./proxmox/ubuntu-streaming"
         packer build -force -var-file="ubuntu-26.04.auto.pkrvars.hcl" .
@@ -89,9 +89,9 @@ case "${COMMAND}" in
         run_ansible "configure-gateway.yml"
         exit 0
         ;;
-    configure-home)
+    configure-streaming)
         echo "==> Configuring home VM with Ansible"
-        run_ansible "configure-home.yml"
+        run_ansible "configure-streaming.yml"
         exit 0
         ;;
     configure-all)
@@ -102,8 +102,8 @@ case "${COMMAND}" in
 
     *)
         echo "Invalid command: ${COMMAND}"
-        echo "Usage: $0 {build-cloud|build-database|build-gateway|build-home}"
-        echo "       $0 {configure-cloud|configure-database|configure-gateway|configure-home|configure-all}"
+        echo "Usage: $0 {build-cloud|build-database|build-gateway|build-streaming}"
+        echo "       $0 {configure-cloud|configure-database|configure-gateway|configure-streaming|configure-all}"
         exit 1
         ;;
 esac
