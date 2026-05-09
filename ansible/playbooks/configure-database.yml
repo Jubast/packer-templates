@@ -6,3 +6,4 @@
   roles:
     - common
     - ubuntu_database
+    - common_after

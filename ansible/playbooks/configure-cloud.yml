@@ -6,3 +6,4 @@
   roles:
     - common
     - ubuntu_cloud
+    - common_after

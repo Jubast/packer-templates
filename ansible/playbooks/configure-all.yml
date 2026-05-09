@@ -5,6 +5,7 @@
   roles:
     - common
     - ubuntu_database
+    - common_after
 
 - name: Configure ubuntu-gateway VM
   hosts: ubuntu_gateway
@@ -12,6 +13,7 @@
   roles:
     - common
     - ubuntu_gateway
+    - common_after
 
 - name: Configure ubuntu-cloud VM
   hosts: ubuntu_cloud
@@ -19,6 +21,7 @@
   roles:
     - common
     - ubuntu_cloud
+    - common_after
 
 - name: Configure ubuntu-streaming VM
   hosts: ubuntu_streaming
@@ -26,3 +29,4 @@
   roles:
     - common
     - ubuntu_streaming
+    - common_after

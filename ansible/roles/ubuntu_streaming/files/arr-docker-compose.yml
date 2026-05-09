@@ -10,7 +10,7 @@ volumes:
 services:
   # Torrent tracker index management
   prowlarr:
-    image: docker.io/linuxserver/prowlarr:2.3.0
+    image: docker.io/linuxserver/prowlarr:2.3.5
     restart: unless-stopped
     network_mode: pasta
     ports:
@@ -35,7 +35,7 @@ services:
 
   # TvShow management
   sonarr:
-    image: docker.io/linuxserver/sonarr:4.0.16
+    image: docker.io/linuxserver/sonarr:4.0.17
     restart: unless-stopped
     network_mode: pasta
     ports:
@@ -61,7 +61,7 @@ services:
 
   # Movie management
   radarr:
-    image: docker.io/linuxserver/radarr:6.0.4
+    image: docker.io/linuxserver/radarr:6.1.1
     restart: unless-stopped
     network_mode: pasta
     ports:
@@ -113,7 +113,7 @@ services:
 
   # TvShow & Movie requests
   jellyseerr:
-    image: docker.io/seerr/seerr:v3.1.0
+    image: docker.io/seerr/seerr:v3.2.0
     restart: unless-stopped
     network_mode: pasta
     ports:

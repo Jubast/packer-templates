@@ -90,7 +90,7 @@ case "${COMMAND}" in
         exit 0
         ;;
     configure-streaming)
-        echo "==> Configuring home VM with Ansible"
+        echo "==> Configuring streaming VM with Ansible"
         run_ansible "configure-streaming.yml"
         exit 0
         ;;

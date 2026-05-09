@@ -1,0 +1,7 @@
+---
+- name: Prune unused container images
+  ansible.builtin.command: podman image prune --all --force
+  register: _prune_result
+  changed_when: _prune_result.stdout | length > 0
+  become: true
+  become_user: "{{ container_user }}"

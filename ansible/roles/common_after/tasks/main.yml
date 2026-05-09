@@ -1,0 +1,8 @@
+---
+- name: Flush handlers to ensure containers are restarted before image pruning
+  ansible.builtin.meta: flush_handlers
+
+- name: Prune unused container images
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: prune_images

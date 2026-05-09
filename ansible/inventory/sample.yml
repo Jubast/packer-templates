@@ -37,8 +37,8 @@ all:
 
     ubuntu_streaming:
       hosts:
-        home:
+        streaming:
           ansible_host: 192.168.1.x
       vars:
-        ansible_user: home
+        ansible_user: streaming
         ansible_ssh_private_key_file: ~/.ssh/id_ed25519
