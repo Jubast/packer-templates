@@ -136,3 +136,6 @@ services:
         limits:
           cpus: '0.5'
           memory: 256M
+
+x-podman:
+  in_pod: false
