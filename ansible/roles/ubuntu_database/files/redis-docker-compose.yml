@@ -5,7 +5,7 @@ volumes:
 
 services:
   redis:
-    image: docker.io/redis:7.4.8-alpine
+    image: docker.io/redis:8.6.3-alpine
     command: redis-server /usr/local/etc/redis/redis.conf
     network_mode: pasta
     restart: unless-stopped
