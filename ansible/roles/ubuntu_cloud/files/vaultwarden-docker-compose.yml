@@ -5,7 +5,7 @@ volumes:
 
 services:
   vaultwarden:
-    image: docker.io/vaultwarden/server:1.35.7-alpine
+    image: docker.io/vaultwarden/server:1.36.0-alpine
     restart: unless-stopped
     network_mode: pasta
     ports:
