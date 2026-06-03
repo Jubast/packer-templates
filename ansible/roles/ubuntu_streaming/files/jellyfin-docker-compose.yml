@@ -6,7 +6,7 @@ volumes:
 
 services:
   jellyfin:
-    image: docker.io/linuxserver/jellyfin:10.11.8
+    image: docker.io/linuxserver/jellyfin:10.11.10
     restart: unless-stopped
     network_mode: pasta
     ports:
