@@ -47,7 +47,7 @@ services:
 
   imaginary:
     # Accessed by Nextcloud via internal Docker network (http://imaginary:9000). Not exposed to the host.
-    image: docker.io/nextcloud/aio-imaginary:20260409_094910
+    image: docker.io/nextcloud/aio-imaginary:20260527_140826
     restart: unless-stopped
     network_mode: pasta
     command: -concurrency 20 -enable-url-source
