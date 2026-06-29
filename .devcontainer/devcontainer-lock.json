@@ -1,0 +1,19 @@
+{
+  "features": {
+    "ghcr.io/devcontainers-extra/features/ansible:2": {
+      "version": "2.1.2",
+      "resolved": "ghcr.io/devcontainers-extra/features/ansible@sha256:0b0c1e75e3c0fc9036d2d73277ded8d7c7589cb5971fc51549c38eaa0d5893ca",
+      "integrity": "sha256:0b0c1e75e3c0fc9036d2d73277ded8d7c7589cb5971fc51549c38eaa0d5893ca"
+    },
+    "ghcr.io/devcontainers-extra/features/packer-asdf:2": {
+      "version": "2.0.16",
+      "resolved": "ghcr.io/devcontainers-extra/features/packer-asdf@sha256:897f4ce5a107658b89b3e6111b3ca6f1aa9c22bfb660d31918e618b2b098ada5",
+      "integrity": "sha256:897f4ce5a107658b89b3e6111b3ca6f1aa9c22bfb660d31918e618b2b098ada5"
+    },
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "version": "2.5.9",
+      "resolved": "ghcr.io/devcontainers/features/common-utils@sha256:cb0c4d3c276f157eed17935747e364178d75fee17f55c4e129966f64633deb3a",
+      "integrity": "sha256:cb0c4d3c276f157eed17935747e364178d75fee17f55c4e129966f64633deb3a"
+    }
+  }
+}

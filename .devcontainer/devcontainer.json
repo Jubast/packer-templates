@@ -1,0 +1,35 @@
+{
+  "name": "packer-templates",
+  "image": "mcr.microsoft.com/devcontainers/base:trixie",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false,
+      "installOhMyZsh": false,
+      "upgradePackages": true
+    },
+    "ghcr.io/devcontainers-extra/features/packer-asdf:2": {},
+    "ghcr.io/devcontainers-extra/features/ansible:2": {}
+  },
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly",
+    "source=${localEnv:HOME}/.claude,target=/home/vscode/.claude,type=bind"
+  ],
+  "postCreateCommand": "scripts/setup.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "redhat.ansible",
+        "hashicorp.hcl",
+        "anthropic.claude-code"
+      ],
+      "settings": {
+        "ansible.python.interpreterPath": "/usr/bin/python3",
+        "ansible.ansible.path": "/usr/bin/ansible",
+        "ansible.validation.lint.enabled": true,
+        "yaml.schemas": {
+          "https://json.schemastore.org/ansible-playbook.json": "ansible/playbooks/*.yml"
+        }
+      }
+    }
+  }
+}
