@@ -28,7 +28,7 @@ if [[ $# -lt 1 ]]; then
     echo ""
     echo "Ansible options are passed through, e.g.:"
     echo "  $0 configure-cloud --ask-become-pass"
-    echo "  $0 configure-cloud --tags firewall"
+    echo "  $0 configure-cloud --extra-vars "start_services=true" --ask-become-pass"
     exit 1
 fi
 
