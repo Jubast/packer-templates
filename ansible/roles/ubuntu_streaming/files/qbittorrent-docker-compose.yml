@@ -5,7 +5,7 @@ volumes:
 
 services:
   qbittorrent:
-    image: docker.io/linuxserver/qbittorrent:5.2.1
+    image: docker.io/linuxserver/qbittorrent:5.2.2
     restart: unless-stopped
     network_mode: pasta
     ports:
