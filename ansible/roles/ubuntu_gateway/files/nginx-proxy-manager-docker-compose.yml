@@ -6,7 +6,7 @@ volumes:
 
 services:
   nginx-proxy-manager:
-    image: docker.io/jc21/nginx-proxy-manager:2.14.0
+    image: docker.io/jc21/nginx-proxy-manager:2.15.1
     restart: unless-stopped
     network_mode: pasta
     ports:
