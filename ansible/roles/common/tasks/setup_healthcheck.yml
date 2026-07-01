@@ -1,6 +1,7 @@
 ---
 # Deploy the container healthcheck watcher script and its systemd timer.
-# Restarts any podman containers that enter an unhealthy state every 2 minutes.
+# Every 2 minutes, restarts any podman containers that enter an unhealthy state,
+# and starts back up any that exited but should be running per their restart policy.
 
 - name: Deploy container healthcheck script
   ansible.builtin.copy:
