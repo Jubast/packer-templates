@@ -24,8 +24,8 @@
 - name: Enable container healthcheck timer
   ansible.builtin.systemd:
     name: container-healthcheck.timer
-    enabled: "{{ start_services }}"
-    state: "{{ 'started' if start_services else omit }}"
+    enabled: "{{ start_services | bool }}"
+    state: "{{ 'started' if (start_services | bool) else omit }}"
     scope: user
     daemon_reload: true
   environment:

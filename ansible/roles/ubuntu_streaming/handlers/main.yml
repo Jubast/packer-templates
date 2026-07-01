@@ -6,7 +6,7 @@
     scope: user
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
-  when: start_services | default(false)
+  when: start_services | default(false) | bool
 
 - name: Restart arr container service
   ansible.builtin.systemd:
@@ -15,7 +15,7 @@
     scope: user
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
-  when: start_services | default(false)
+  when: start_services | default(false) | bool
 
 - name: Restart qbittorrent container service
   ansible.builtin.systemd:
@@ -24,4 +24,4 @@
     scope: user
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
-  when: start_services | default(false)
+  when: start_services | default(false) | bool

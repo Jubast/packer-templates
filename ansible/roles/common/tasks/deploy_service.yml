@@ -22,8 +22,8 @@
 - name: "Enable user service | {{ common_service_name }}"
   ansible.builtin.systemd:
     name: "podman-compose-{{ common_service_name }}.service"
-    enabled: "{{ start_services }}"
-    state: "{{ 'started' if start_services else omit }}"
+    enabled: "{{ start_services | bool }}"
+    state: "{{ 'started' if (start_services | bool) else omit }}"
     scope: user
     daemon_reload: true
   environment:
