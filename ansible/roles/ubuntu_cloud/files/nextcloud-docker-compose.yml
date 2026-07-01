@@ -19,7 +19,7 @@ volumes:
 
 services:
   nextcloud:
-    image: docker.io/nextcloud:33-apache
+    image: docker.io/nextcloud:34-apache
     restart: unless-stopped
     network_mode: pasta
     ports:
