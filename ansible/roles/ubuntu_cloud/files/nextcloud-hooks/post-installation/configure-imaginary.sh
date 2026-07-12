@@ -18,8 +18,9 @@ run_occ config:system:set preview_max_x --value="2048" --type=integer
 run_occ config:system:set preview_max_y --value="2048" --type=integer
 run_occ config:system:set jpeg_quality --value="60" --type=integer
 run_occ config:app:set preview jpeg_quality --value="60"
-run_occ config:system:set preview_imaginary_host --value="http://imaginary:9000"
+run_occ config:system:set preview_imaginary_url --value="http://169.254.1.2:9000"
 run_occ config:system:delete enabledPreviewProviders
+run_occ config:system:set enabledPreviewProviders 0 --value="OC\\Preview\\Imaginary"
 run_occ config:system:set enabledPreviewProviders 1 --value="OC\\Preview\\Image"
 run_occ config:system:set enabledPreviewProviders 2 --value="OC\\Preview\\MarkDown"
 run_occ config:system:set enabledPreviewProviders 3 --value="OC\\Preview\\MP3"

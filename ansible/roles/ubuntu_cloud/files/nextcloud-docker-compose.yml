@@ -42,15 +42,16 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2.0'
+          cpus: '3.0'
           memory: 1024M
 
   imaginary:
-    # Accessed by Nextcloud via internal Docker network (http://imaginary:9000). Not exposed to the host.
     image: docker.io/nextcloud/aio-imaginary:20260527_140826
     restart: unless-stopped
     network_mode: pasta
-    command: -concurrency 20 -enable-url-source
+    ports:
+      - 9000:9000
+    command: -concurrency 50 -enable-url-source
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:9000/health"]
       start_period: 30s
@@ -60,7 +61,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.0'
+          cpus: '2.0'
           memory: 512M
 
   onlyoffice:
@@ -89,5 +90,5 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2.0'
+          cpus: '3.0'
           memory: 2048M
