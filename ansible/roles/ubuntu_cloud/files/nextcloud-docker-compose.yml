@@ -43,7 +43,7 @@ services:
       resources:
         limits:
           cpus: '3.0'
-          memory: 1024M
+          memory: 3072M
 
   imaginary:
     image: docker.io/nextcloud/aio-imaginary:20260527_140826
@@ -61,7 +61,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2.0'
+          cpus: '3.0'
           memory: 512M
 
   onlyoffice:

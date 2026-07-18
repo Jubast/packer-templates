@@ -166,13 +166,26 @@
     XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
   when: start_services | bool
 
-- name: Wait for post-installation hooks to complete (OnlyOffice app)
+- name: Wait for before-starting hooks to complete (OnlyOffice app)
   ansible.builtin.command:
     cmd: podman exec --user www-data nextcloud_nextcloud_1 php /var/www/html/occ app:list --output=json
   register: _nc_apps
   retries: 48
   delay: 5
   until: _nc_apps.rc == 0 and '"onlyoffice"' in (_nc_apps.stdout | default(''))
+  failed_when: false
+  changed_when: false
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+  when: (start_services | bool) and _nc_status.rc is defined and _nc_status.rc == 0
+
+- name: Wait for before-starting hooks to complete (Preview Generator app)
+  ansible.builtin.command:
+    cmd: podman exec --user www-data nextcloud_nextcloud_1 php /var/www/html/occ app:list --output=json
+  register: _nc_apps_previewgenerator
+  retries: 48
+  delay: 5
+  until: _nc_apps_previewgenerator.rc == 0 and '"previewgenerator"' in (_nc_apps_previewgenerator.stdout | default(''))
   failed_when: false
   changed_when: false
   environment:
