@@ -42,6 +42,7 @@ run_occ config:system:set enabledPreviewProviders 4 --value="OC\\Preview\\TXT"
 run_occ config:system:set enabledPreviewProviders 5 --value="OC\\Preview\\OpenDocument"
 run_occ config:system:set enabledPreviewProviders 6 --value="OC\\Preview\\Movie"
 run_occ config:system:set enabledPreviewProviders 7 --value="OC\\Preview\\Krita"
+run_occ config:system:set enabledPreviewProviders 23 --value="OC\\Preview\\ImaginaryPDF"
 run_occ config:system:set enable_previews --value=true --type=boolean
 
 echo "  -> Imaginary preview service configured."

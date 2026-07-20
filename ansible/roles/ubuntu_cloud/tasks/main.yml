@@ -55,6 +55,23 @@
     mode: '0644'
   notify: Restart nextcloud container service
 
+- name: Copy nextcloud Dockerfile
+  ansible.builtin.copy:
+    src: nextcloud.Dockerfile
+    dest: "{{ common_compose_base_dir }}/nextcloud/Dockerfile"
+    mode: '0644'
+  register: _nextcloud_dockerfile
+
+- name: Build nextcloud image with ffmpeg
+  ansible.builtin.command:
+    cmd: podman build -t localhost/nextcloud-ffmpeg:33-apache -f Dockerfile .
+    chdir: "{{ common_compose_base_dir }}/nextcloud"
+  changed_when: true
+  when: _nextcloud_dockerfile.changed
+  notify: Restart nextcloud container service
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ container_user_uid }}"
+
 - name: Template nextcloud.env
   ansible.builtin.template:
     src: nextcloud.env.j2

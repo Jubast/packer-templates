@@ -19,7 +19,10 @@ volumes:
 
 services:
   nextcloud:
-    image: docker.io/nextcloud:33-apache
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: localhost/nextcloud-ffmpeg:33-apache
     restart: unless-stopped
     network_mode: pasta
     ports:
