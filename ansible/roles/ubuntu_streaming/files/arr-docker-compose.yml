@@ -35,7 +35,7 @@ services:
 
   # TvShow management
   sonarr:
-    image: docker.io/linuxserver/sonarr:4.0.17
+    image: docker.io/linuxserver/sonarr:4.0.19
     restart: unless-stopped
     network_mode: pasta
     ports:
