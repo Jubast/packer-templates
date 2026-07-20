@@ -1,2 +1,8 @@
 [network]
 default_rootless_network_cmd = "pasta"
+
+[containers]
+# Route container logs through journald instead of unbounded k8s-file logs,
+# so retention is governed by journald's own time-based rotation (see
+# /etc/systemd/journald.conf.d/podman-retention.conf).
+log_driver = "journald"

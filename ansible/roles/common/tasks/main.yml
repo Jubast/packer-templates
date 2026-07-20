@@ -109,3 +109,25 @@
     src: containers.conf.j2
     dest: "/home/{{ container_user }}/.config/containers/containers.conf"
     mode: '0644'
+
+- name: Create journald drop-in directory
+  ansible.builtin.file:
+    path: /etc/systemd/journald.conf.d
+    state: directory
+    mode: '0755'
+  become: true
+
+- name: Cap podman container log retention to 1 week via journald
+  ansible.builtin.template:
+    src: journald-podman-retention.conf.j2
+    dest: /etc/systemd/journald.conf.d/podman-retention.conf
+    mode: '0644'
+  become: true
+  register: _journald_retention_conf
+
+- name: Restart systemd-journald to apply log retention settings
+  ansible.builtin.systemd:
+    name: systemd-journald
+    state: restarted
+  become: true
+  when: _journald_retention_conf.changed
