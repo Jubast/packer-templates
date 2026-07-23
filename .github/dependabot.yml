@@ -5,6 +5,11 @@ updates:
     schedule:
       interval: "monthly"
 
+  - package-ecosystem: "docker"
+    directory: "/ansible/roles/ubuntu_cloud/files"
+    schedule:
+      interval: "monthly"
+
   - package-ecosystem: "docker-compose"
     directory: "/ansible/roles/ubuntu_database/files"
     schedule:
