@@ -10,7 +10,7 @@ volumes:
 services:
   # Torrent tracker index management
   prowlarr:
-    image: docker.io/linuxserver/prowlarr:2.4.0
+    image: docker.io/linuxserver/prowlarr:2.5.2
     restart: unless-stopped
     network_mode: pasta
     ports:
