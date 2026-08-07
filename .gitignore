@@ -23,3 +23,12 @@ ansible/inventory/hosts.yml
 ansible/.vault_password
 ansible/**/*.vault.yml
 .ansible
+
+# devcontainers
+devcontainer-lock.json
+.devcontainer/*/devcontainer.json
+
+# local files
+*.local
+*.local.json
+*.local.md

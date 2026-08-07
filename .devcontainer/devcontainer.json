@@ -10,17 +10,12 @@
     "ghcr.io/devcontainers-extra/features/packer-asdf:2": {},
     "ghcr.io/devcontainers-extra/features/ansible:2": {}
   },
-  "mounts": [
-    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly",
-    "source=${localEnv:HOME}/.claude,target=/home/vscode/.claude,type=bind"
-  ],
   "postCreateCommand": "scripts/setup.sh",
   "customizations": {
     "vscode": {
       "extensions": [
         "redhat.ansible",
-        "hashicorp.hcl",
-        "anthropic.claude-code"
+        "hashicorp.hcl"
       ],
       "settings": {
         "ansible.python.interpreterPath": "/usr/bin/python3",
