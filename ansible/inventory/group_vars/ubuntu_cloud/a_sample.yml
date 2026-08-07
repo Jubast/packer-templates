@@ -13,27 +13,27 @@ common_user_bin_dir: "/home/{{ container_user }}/.local/bin"
 cloud_nextcloud_db_host: "192.168.1.x"     # IP of ubuntu-database
 cloud_nextcloud_db_name: "nextcloud"
 cloud_nextcloud_db_user: "nextcloud"
-cloud_nextcloud_db_password: "ChangeMeToAStrongPassword123!"   # use ansible-vault
-cloud_nextcloud_redis_password: "ChangeMeToAStrongPassword123!"   # use ansible-vault
-cloud_nextcloud_admin_password: "ChangeMeToAStrongPassword123!"   # use ansible-vault
+cloud_nextcloud_db_password: "{{ lookup('viczem.keepass.keepass', 'ubuntu_cloud/nextcloud_db_password', 'password') }}"
+cloud_nextcloud_redis_password: "{{ lookup('viczem.keepass.keepass', 'shared/redis_nextcloud_password', 'password') }}"
+cloud_nextcloud_admin_password: "{{ lookup('viczem.keepass.keepass', 'ubuntu_cloud/nextcloud_admin_password', 'password') }}"
 cloud_nextcloud_trusted_proxies: "127.0.0.1"
 cloud_nextcloud_trusted_domains: "localhost"
 
 # ---------------------------------------------------------------------------
 # OnlyOffice
 # ---------------------------------------------------------------------------
-cloud_onlyoffice_jwt_secret: "ChangeMeToAStrongRandomSecret123!"  # use ansible-vault
+cloud_onlyoffice_jwt_secret: "{{ lookup('viczem.keepass.keepass', 'ubuntu_cloud/onlyoffice_jwt_secret', 'password') }}"
 cloud_onlyoffice_db_host: "192.168.1.x"     # IP of ubuntu-database
 cloud_onlyoffice_db_name: "onlyoffice"
 cloud_onlyoffice_db_user: "onlyoffice"
-cloud_onlyoffice_db_password: "ChangeMeToAStrongPassword123!"   # use ansible-vault
+cloud_onlyoffice_db_password: "{{ lookup('viczem.keepass.keepass', 'ubuntu_cloud/onlyoffice_db_password', 'password') }}"
 cloud_onlyoffice_redis_host: "192.168.1.x"     # IP of ubuntu-database
 cloud_onlyoffice_redis_user: ""
-cloud_onlyoffice_redis_pass: "ChangeMeToAStrongPassword123!"   # use ansible-vault
+cloud_onlyoffice_redis_pass: "{{ lookup('viczem.keepass.keepass', 'shared/redis_onlyoffice_password', 'password') }}"
 cloud_onlyoffice_redis_db: "1"
-cloud_onlyoffice_amqp_uri: "amqp://admin:ChangeMeToAStrongPassword123!@192.168.1.x:5672/"  # use ansible-vault
+cloud_onlyoffice_amqp_uri: "amqp://admin:{{ lookup('viczem.keepass.keepass', 'shared/rabbitmq_default_password', 'password') }}@192.168.1.x:5672/"
 
 # ---------------------------------------------------------------------------
 # Vaultwarden
 # ---------------------------------------------------------------------------
-cloud_vaultwarden_admin_token: "ChangeMeToAStrongRandomToken123!"  # use ansible-vault
+cloud_vaultwarden_admin_token: "{{ lookup('viczem.keepass.keepass', 'ubuntu_cloud/vaultwarden_admin_token', 'password') }}"

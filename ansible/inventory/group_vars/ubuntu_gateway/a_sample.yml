@@ -11,14 +11,14 @@ common_user_bin_dir: "/home/{{ container_user }}/.local/bin"
 npm_db_mysql_host: "192.168.1.x"          # IP of ubuntu-database
 npm_db_mysql_port: 3306
 npm_db_mysql_user: "npm"
-npm_db_mysql_password: "ChangeMeToAStrongPassword123!"  # use ansible-vault
+npm_db_mysql_password: "{{ lookup('viczem.keepass.keepass', 'ubuntu_gateway/npm_db_mysql_password', 'password') }}"
 npm_db_mysql_name: "npm"
 
 # ---------------------------------------------------------------------------
 # ddclient — Cloudflare DDNS
 # ---------------------------------------------------------------------------
 ddclient_cloudflare_zone: "example.com"
-ddclient_cloudflare_api_token: "your_cloudflare_api_token_here"  # use ansible-vault
+ddclient_cloudflare_api_token: "{{ lookup('viczem.keepass.keepass', 'ubuntu_gateway/ddclient_cloudflare_api_token', 'password') }}"
 ddclient_hostname: "subdomain.example.com"
 
 # ---------------------------------------------------------------------------
@@ -28,11 +28,12 @@ wireguard_server_network_interface: "eth0"
 wireguard_server_address_ipv4: "10.10.0.1"
 wireguard_server_subnet_address_ipv4: "10.10.0.0"
 wireguard_server_listen_port: 51820
-wireguard_server_private_key: "base64_encoded_private_key_goes_here"   # use ansible-vault
+wireguard_server_private_key: "{{ lookup('viczem.keepass.keepass', 'ubuntu_gateway/wireguard_server_private_key', 'password') }}"
 wireguard_server_public_key: "base64_encoded_public_key_goes_here"
 wireguard_peers:
+  # Path segment after "wireguard_peers/" must match this peer's name: below.
   - name: "client-1"
-    private_key: "base64_encoded_private_key_goes_here"    # use ansible-vault
+    private_key: "{{ lookup('viczem.keepass.keepass', 'ubuntu_gateway/wireguard_peers/client-1/private_key', 'password') }}"
     public_key: "base64_encoded_public_key_goes_here"
-    preshared_key: "base64_encoded_preshared_key_goes_here"  # use ansible-vault
+    preshared_key: "{{ lookup('viczem.keepass.keepass', 'ubuntu_gateway/wireguard_peers/client-1/preshared_key', 'password') }}"
     address_ipv4: "10.10.0.2"

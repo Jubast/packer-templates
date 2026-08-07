@@ -1,3 +1,9 @@
 ---
 # Variables shared across all VM groups.
 # Extend this file for any cross-VM settings.
+
+# Path to the KeePass database backing all `viczem.keepass.keepass` lookups in
+# group_vars (see CLAUDE.md's Secrets section). The real database lives
+# entirely outside this repo; override via the ANSIBLE_KEEPASS_DBX env var
+# rather than editing this default. run.sh sets this for you via --keepass-dbx.
+keepass_dbx: "{{ lookup('env', 'ANSIBLE_KEEPASS_DBX') | default('~/.keepass/packer-templates.kdbx', true) }}"

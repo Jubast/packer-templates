@@ -8,16 +8,16 @@ common_user_bin_dir: "/home/{{ container_user }}/.local/bin"
 # ---------------------------------------------------------------------------
 # MariaDB
 # ---------------------------------------------------------------------------
-database_mariadb_root_password: "ChangeMeToAStrongPassword123!"  # use ansible-vault
+database_mariadb_root_password: "{{ lookup('viczem.keepass.keepass', 'ubuntu_database/mariadb_root_password', 'password') }}"
 
 # ---------------------------------------------------------------------------
 # Redis
 # ---------------------------------------------------------------------------
-database_redis_nextcloud_password: "ChangeMeToAStrongPassword123!"  # use ansible-vault
-database_redis_onlyoffice_password: "ChangeMeToAStrongPassword123!"  # use ansible-vault
+database_redis_nextcloud_password: "{{ lookup('viczem.keepass.keepass', 'shared/redis_nextcloud_password', 'password') }}"
+database_redis_onlyoffice_password: "{{ lookup('viczem.keepass.keepass', 'shared/redis_onlyoffice_password', 'password') }}"
 
 # ---------------------------------------------------------------------------
 # RabbitMQ
 # ---------------------------------------------------------------------------
 database_rabbitmq_default_user: "admin"
-database_rabbitmq_default_password: "ChangeMeToAStrongPassword123!"  # use ansible-vault
+database_rabbitmq_default_password: "{{ lookup('viczem.keepass.keepass', 'shared/rabbitmq_default_password', 'password') }}"

@@ -86,3 +86,17 @@ variable "user_ssh_authorized_keys" {
   type = string
   description = "The SSH authorized keys for the user."
 }
+
+// SECRETS
+variable "ansible_keepass_psw" {
+  type = string
+  description = "KeePass master password forwarded to Ansible during the build. Supply via the ANSIBLE_KEEPASS_PSW environment variable — never set a literal value here or in a var-file."
+  default = env("ANSIBLE_KEEPASS_PSW")
+  sensitive = true
+}
+
+variable "ansible_keepass_dbx" {
+  type = string
+  description = "Path to the KeePass database, forwarded to Ansible during the build. Supply via the ANSIBLE_KEEPASS_DBX environment variable."
+  default = env("ANSIBLE_KEEPASS_DBX")
+}

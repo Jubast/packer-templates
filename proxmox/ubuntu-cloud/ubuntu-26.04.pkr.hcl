@@ -112,7 +112,9 @@ build {
       playbook_file = "${path.root}/../../ansible/playbooks/configure-cloud.yml"
       user          = var.user_username
       ansible_env_vars = [
-        "ANSIBLE_CONFIG=${path.root}/../../ansible.cfg"
+        "ANSIBLE_CONFIG=${path.root}/../../ansible.cfg",
+        "ANSIBLE_KEEPASS_PSW=${var.ansible_keepass_psw}",
+        "ANSIBLE_KEEPASS_DBX=${var.ansible_keepass_dbx}"
       ]
       extra_arguments = [
         "--extra-vars", "@${path.root}/../../ansible/inventory/group_vars/ubuntu_cloud/main.yml",
