@@ -19,24 +19,26 @@ Infrastructure-as-code for a Proxmox homelab. Packer builds Ubuntu 26.04 VM temp
 
 ## Usage
 
-All commands are run via `run.sh` from the repo root.
+Builds are run via `scripts/build.sh`, configuration via `scripts/configure.sh` — both from the repo
+root. Both require a `--keepass-dbx <path>` argument (path to the KeePass database holding this repo's
+secrets) and will prompt for its master password.
 
 ### 1. Build a VM template (Packer)
 
 Copy the sample vars file and fill in your Proxmox connection details, storage pool, and desired VM settings:
 
 ```bash
-cp proxmox/ubuntu-cloud/ubuntu-26.04.sample.pkrvars.hcl proxmox/ubuntu-cloud/ubuntu-26.04.auto.pkrvars.hcl
+cp packer/proxmox/ubuntu-cloud/ubuntu-26.04.sample.pkrvars.hcl packer/proxmox/ubuntu-cloud/ubuntu-26.04.auto.pkrvars.hcl
 # edit ubuntu-26.04.auto.pkrvars.hcl
 ```
 
 Then build:
 
 ```bash
-./run.sh build-cloud
-./run.sh build-database
-./run.sh build-gateway
-./run.sh build-streaming
+scripts/build.sh build-cloud      --keepass-dbx ~/secrets/packer-templates.kdbx
+scripts/build.sh build-database   --keepass-dbx ~/secrets/packer-templates.kdbx
+scripts/build.sh build-gateway    --keepass-dbx ~/secrets/packer-templates.kdbx
+scripts/build.sh build-streaming  --keepass-dbx ~/secrets/packer-templates.kdbx
 ```
 
 ### 2. Configure inventory (Ansible)
@@ -57,31 +59,36 @@ cp ansible/inventory/group_vars/ubuntu_cloud/a_sample.yml \
 ### 3. Configure VMs (Ansible)
 
 ```bash
-./run.sh configure-cloud
-./run.sh configure-database
-./run.sh configure-gateway
-./run.sh configure-streaming
-./run.sh configure-all        # all VMs at once
+scripts/configure.sh configure-cloud      --keepass-dbx ~/secrets/packer-templates.kdbx
+scripts/configure.sh configure-database   --keepass-dbx ~/secrets/packer-templates.kdbx
+scripts/configure.sh configure-gateway    --keepass-dbx ~/secrets/packer-templates.kdbx
+scripts/configure.sh configure-streaming  --keepass-dbx ~/secrets/packer-templates.kdbx
+scripts/configure.sh configure-all        --keepass-dbx ~/secrets/packer-templates.kdbx  # all VMs at once
 ```
 
 Extra arguments are forwarded to `ansible-playbook`:
 
 ```bash
-./run.sh configure-cloud --ask-become-pass
-./run.sh configure-streaming --extra-vars "start_services=true" --ask-become-pass
+scripts/configure.sh configure-cloud --keepass-dbx ~/secrets/packer-templates.kdbx --ask-become-pass
+scripts/configure.sh configure-streaming --keepass-dbx ~/secrets/packer-templates.kdbx --extra-vars "start_services=true" --ask-become-pass
 ```
 
 ## Repository structure
 
 ```
-run.sh                        # entry point for all build/configure commands
-proxmox/
-  ubuntu-{cloud,database,gateway,streaming}/
-    variables.pkr.hcl         # variable declarations
-    ubuntu-26.04.pkr.hcl      # Packer build definition
-    ubuntu-26.04.sample.pkrvars.hcl
-    ubuntu-26.04.auto.pkrvars.hcl   # your values (gitignored)
-    cloud-init/               # cloud-init user-data template + meta-data
+scripts/
+  build.sh                     # entry point for all Packer build commands
+  configure.sh                 # entry point for all Ansible configure commands
+  lib/keepass-env.sh           # shared --keepass-dbx parsing / password prompt
+  setup.sh                     # devcontainer bootstrap
+packer/
+  proxmox/
+    ubuntu-{cloud,database,gateway,streaming}/
+      variables.pkr.hcl         # variable declarations
+      ubuntu-26.04.pkr.hcl      # Packer build definition
+      ubuntu-26.04.sample.pkrvars.hcl
+      ubuntu-26.04.auto.pkrvars.hcl   # your values (gitignored)
+      cloud-init/               # cloud-init user-data template + meta-data
 ansible/
   inventory/
     hosts.yml                 # your inventory (gitignored)
