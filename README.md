@@ -79,7 +79,7 @@ scripts/configure.sh configure-streaming --keepass-dbx ~/secrets/packer-template
 scripts/
   build.sh                     # entry point for all Packer build commands
   configure.sh                 # entry point for all Ansible configure commands
-  lib/keepass-env.sh           # shared --keepass-dbx parsing / password prompt
+  lib/keepass-utils.sh         # shared --keepass-dbx parsing / password prompt
   setup.sh                     # devcontainer bootstrap
 packer/
   proxmox/

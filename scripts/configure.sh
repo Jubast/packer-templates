@@ -10,8 +10,8 @@ set -o pipefail  # Catch errors in piped commands
 
 cd "$(dirname "$0")/.."
 
-# shellcheck source=lib/keepass-env.sh
-source "scripts/lib/keepass-env.sh"
+# shellcheck source=lib/keepass-utils.sh
+source "scripts/lib/keepass-utils.sh"
 
 if [[ $# -lt 1 ]]; then
     echo "Usage: $0 {configure-cloud|configure-database|configure-gateway|configure-streaming|configure-all} --keepass-dbx <path>"
@@ -23,8 +23,7 @@ if [[ $# -lt 1 ]]; then
     echo "  $0 configure-all        --keepass-dbx <path>  # Configure all VMs"
     echo ""
     echo "--keepass-dbx <path> is required — path to the KeePass database holding"
-    echo "this repo's secrets (see CLAUDE.md's Secrets section). You'll be prompted"
-    echo "for its master password."
+    echo "this repo's secrets. You'll be prompted for its master password."
     echo ""
     echo "Ansible options are passed through, e.g.:"
     echo "  $0 configure-cloud --keepass-dbx ~/secrets/packer-templates.kdbx --ask-become-pass"
@@ -35,12 +34,36 @@ fi
 COMMAND="$1"
 shift
 
-keepass_parse_args "$@"
+KEEPASS_DBX=$(keepass_parse_dbx_arg "$@") || exit 1
+KEEPASS_PSW=$(keepass_prompt_password)
+
+# Everything except --keepass-dbx/--keepass-dbx=... gets forwarded to ansible-playbook.
+REMAINING_ARGS=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --keepass-dbx)
+            shift 2
+            ;;
+        --keepass-dbx=*)
+            shift
+            ;;
+        *)
+            REMAINING_ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
 
 run_ansible() {
     local playbook="$1"
     cd "./ansible"
+
+    export ANSIBLE_KEEPASS_DBX="${KEEPASS_DBX}"
+    export ANSIBLE_KEEPASS_PSW="${KEEPASS_PSW}"
+
     ansible-playbook "playbooks/${playbook}" "${REMAINING_ARGS[@]+"${REMAINING_ARGS[@]}"}"
+    
+    unset ANSIBLE_KEEPASS_DBX ANSIBLE_KEEPASS_PSW
 }
 
 case "${COMMAND}" in

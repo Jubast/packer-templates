@@ -90,7 +90,7 @@ source "proxmox-iso" "ubuntu-cloud" {
 
     # Boot and Provisioning Settings
     boot_command             = ["e<wait><down><down><down><end> autoinstall 'ds=nocloud;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/'<F10>"]
-    boot_wait                = "5s"
+    boot_wait                = "10s"
 
     # Communicator Settings
     communicator             = "ssh"

@@ -13,11 +13,14 @@ variable "proxmox_url" {
 variable "proxmox_username" {
   type = string
   description = "The username to authenticate with Proxmox."
+  default = env("PACKER_PROXMOX_USERNAME")
+  sensitive = true
 }
 
 variable "proxmox_password" {
   type = string
   description = "The password to authenticate with Proxmox."
+  default = env("PACKER_PROXMOX_PASSWORD")
   sensitive = true
 }
 
@@ -74,16 +77,22 @@ variable "vm_id" {
 variable "user_username" {
   type = string
   description = "The username for the operating system."
+  default = env("PACKER_USER_USERNAME")
+  sensitive = true
 }
 
 variable "user_password_encrypted" {
   type = string
   description = "The encrypted password to login to the operating system."
+  default = env("PACKER_USER_PASSWORD_ENCRYPTED")
+  sensitive = true
 }
 
 variable "user_ssh_authorized_keys" {
   type = string
   description = "The SSH authorized keys for the user."
+  default = env("PACKER_USER_SSH_AUTHORIZED_KEYS")
+  sensitive = true
 }
 
 // SECRETS

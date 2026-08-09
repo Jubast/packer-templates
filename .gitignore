@@ -24,6 +24,9 @@ ansible/.vault_password
 ansible/**/*.vault.yml
 .ansible
 
+# Python
+__pycache__/
+
 # devcontainers
 devcontainer-lock.json
 .devcontainer/*/devcontainer.json
