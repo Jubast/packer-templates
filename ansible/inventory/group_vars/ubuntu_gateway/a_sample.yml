@@ -15,6 +15,12 @@ npm_db_mysql_password: "{{ lookup('viczem.keepass.keepass', 'ubuntu_gateway/npm_
 npm_db_mysql_name: "npm"
 
 # ---------------------------------------------------------------------------
+# adguard - DNS
+# ---------------------------------------------------------------------------
+adguard_name:     "adguard_admin"
+adguard_password: "{{ lookup('viczem.keepass.keepass', 'ubuntu_gateway/adguard_password', 'password') }}"
+
+# ---------------------------------------------------------------------------
 # ddclient — Cloudflare DDNS
 # ---------------------------------------------------------------------------
 ddclient_cloudflare_zone: "example.com"

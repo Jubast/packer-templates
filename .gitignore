@@ -32,3 +32,7 @@ devcontainer-lock.json
 *.local
 *.local.json
 *.local.md
+
+# claude files
+.claude/
+CLAUDE.md
