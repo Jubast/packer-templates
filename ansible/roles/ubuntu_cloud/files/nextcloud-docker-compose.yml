@@ -68,7 +68,7 @@ services:
           memory: 512M
 
   onlyoffice:
-    image: docker.io/onlyoffice/documentserver:9.4.0
+    image: docker.io/onlyoffice/documentserver:9.4.0.1
     restart: unless-stopped
     network_mode: pasta
     ports:
