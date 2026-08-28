@@ -113,7 +113,7 @@ services:
 
   # TvShow & Movie requests
   jellyseerr:
-    image: docker.io/seerr/seerr:v3.3.0
+    image: docker.io/seerr/seerr:v3.4.0
     restart: unless-stopped
     network_mode: pasta
     ports:
