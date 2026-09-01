@@ -49,7 +49,7 @@ services:
           memory: 3072M
 
   imaginary:
-    image: docker.io/nextcloud/aio-imaginary:20260702_083546
+    image: docker.io/nextcloud/aio-imaginary:20260825_084538
     restart: unless-stopped
     network_mode: pasta
     ports:
