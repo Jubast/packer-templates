@@ -1,4 +1,4 @@
-FROM docker.io/nextcloud:34.0.1-apache
+FROM docker.io/nextcloud:35.0.0-apache
 
 # ffmpeg is required by Nextcloud's OC\Preview\Movie provider to generate
 # video thumbnails; the upstream image does not include it.
