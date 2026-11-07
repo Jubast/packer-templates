@@ -87,7 +87,7 @@ services:
 
   # Subtitle management
   bazarr:
-    image: docker.io/linuxserver/bazarr:1.6.0
+    image: docker.io/linuxserver/bazarr:1.6.2
     restart: unless-stopped
     network_mode: pasta
     ports:
